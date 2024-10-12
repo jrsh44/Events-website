@@ -1,9 +1,12 @@
 package com.backend.model;
 
-public record SignUpDto(
+import com.backend.enums.Role;
+
+public record UserCreateDto(
         String firstName,
         String lastName,
         String email,
-        char[] password
+        char[] password,
+        Role role
 ) {
 }

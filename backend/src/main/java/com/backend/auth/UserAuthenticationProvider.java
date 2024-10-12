@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.backend.enums.Role;
 import com.backend.model.UserDto;
 import com.backend.services.UserService;
 import jakarta.annotation.PostConstruct;
@@ -12,10 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.Date;
 
 @RequiredArgsConstructor
@@ -54,26 +56,12 @@ public class UserAuthenticationProvider {
 
         DecodedJWT decoded = verifier.verify(token);
 
-        UserDto user = UserDto.builder()
-                .email(decoded.getSubject())
-                .firstName(decoded.getClaim("firstName").asString())
-                .lastName(decoded.getClaim("lastName").asString())
-                .build();
-
-        return new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(user.getRole()));
-    }
-
-    public Authentication validateTokenStrongly(String token) {
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
-
-        JWTVerifier verifier = JWT.require(algorithm)
-                .build();
-
-        DecodedJWT decoded = verifier.verify(token);
-
         UserDto user = userService.findByEmail(decoded.getSubject());
 
-        return new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(user.getRole()));
+        Role userRole = user.getRole();
+        Collection<? extends GrantedAuthority> authorities = userRole.getAuthorities();
+
+        return new UsernamePasswordAuthenticationToken(user, null, authorities);
     }
 
 }

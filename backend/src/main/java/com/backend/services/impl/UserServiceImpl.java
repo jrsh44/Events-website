@@ -1,11 +1,11 @@
 package com.backend.services.impl;
 
-import com.backend.enums.Role;
-import com.backend.auth.UserAuthenticationProvider;
 import com.backend.data.User;
+import com.backend.enums.Role;
 import com.backend.exceptions.AppException;
 import com.backend.model.CredentialsDto;
 import com.backend.model.SignUpDto;
+import com.backend.model.UserCreateDto;
 import com.backend.model.UserDto;
 import com.backend.repositories.UserRepository;
 import com.backend.services.UserService;
@@ -22,7 +22,6 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserAuthenticationProvider userAuthenticationProvider;
     private final PasswordEncoder passwordEncoder;
 
     public UserDto login(CredentialsDto credentialsDto) {
@@ -43,29 +42,72 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = User.builder()
-            .firstName(userDto.firstName())
-            .lastName(userDto.lastName())
-            .email(userDto.email())
-            .password(passwordEncoder.encode(CharBuffer.wrap(userDto.password())))
-            .role(Role.USER)
-            .build();
+                .firstName(userDto.firstName())
+                .lastName(userDto.lastName())
+                .email(userDto.email())
+                .password(passwordEncoder.encode(CharBuffer.wrap(userDto.password())))
+                .role(Role.USER)
+                .build();
 
         User savedUser = userRepository.save(user);
 
         UserDto savedUserDto = entityToDto(savedUser);
-        savedUserDto.setToken(userAuthenticationProvider.createToken(savedUserDto));
 
         return savedUserDto;
+    }
+
+    @Override
+    public void deleteUser(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException("User doesn't exist", HttpStatus.BAD_REQUEST));
+
+        userRepository.delete(user);
+    }
+
+    @Override
+    public UserDto addUser(UserCreateDto userCreateDto) {
+
+        User user = User.builder()
+                .firstName(userCreateDto.firstName())
+                .lastName(userCreateDto.lastName())
+                .email(userCreateDto.email())
+                .password(passwordEncoder.encode(CharBuffer.wrap(userCreateDto.password())))
+                .role(userCreateDto.role())
+                .build();
+
+        User userSaved = userRepository.save(user);
+
+        return entityToDto(userSaved);
+    }
+
+    @Override
+    public UserDto updateUser(Integer id, UserDto userDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException("User doesn't exist", HttpStatus.BAD_REQUEST));
+
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setRole(userDto.getRole());
+
+        User savedEvent = userRepository.save(user);
+
+        return entityToDto(savedEvent);
+    }
+
+    @Override
+    public UserDto getUser(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException("User doesn't exist", HttpStatus.BAD_REQUEST));
+
+        return entityToDto(user);
     }
 
     public UserDto findByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
 
-        UserDto userDto = entityToDto(user);
-        userDto.setToken(userAuthenticationProvider.createToken(userDto));
-
-        return userDto;
+        return entityToDto(user);
     }
 
     private UserDto entityToDto(User user) {

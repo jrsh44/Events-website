@@ -2,30 +2,19 @@ package com.backend.services.impl;
 
 import com.backend.data.Event;
 import com.backend.exceptions.AppException;
+import com.backend.model.EventCreateDto;
 import com.backend.model.EventDto;
-import com.backend.model.EventTableDto;
-import com.backend.model.UserDto;
 import com.backend.repositories.EventRepository;
 import com.backend.services.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @RequiredArgsConstructor
 @Service
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
-
-    @Override
-    public EventDto[] getArchivedEvents(EventTableDto eventTableDto) {
-
-        Optional<Event[]> eventsArchived = eventRepository.findAllByIsArchived();
-
-        return new EventDto[0];
-    }
 
     @Override
     public void deleteEvent(Integer id) {
@@ -36,22 +25,38 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDto addEvent(EventDto eventDto) {
+    public EventDto addEvent(EventCreateDto eventCreateDto) {
 
-        return null;
+        Event event = Event.builder()
+                .title(eventCreateDto.title())
+                .description(eventCreateDto.description())
+                .type(eventCreateDto.type())
+                .date(eventCreateDto.date())
+                .isArchived(false)
+                .build();
+
+        Event eventSaved = eventRepository.save(event);
+
+        return entityToDto(eventSaved);
     }
 
     @Override
     public EventDto updateEvent(Integer id, EventDto eventDto) {
-        eventRepository.findById(id)
+        Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new AppException("Event doesn't exist", HttpStatus.BAD_REQUEST));
 
-        Event updatedEvent = eventRepository.updateEventById(id, dtoToEntity(eventDto));
-        return entityToDto(updatedEvent);
+        event.setTitle(eventDto.getTitle());
+        event.setDescription(eventDto.getDescription());
+        event.setDate(eventDto.getDate());
+        event.setType(eventDto.getType());
+
+        Event savedEvent = eventRepository.save(event);
+
+        return entityToDto(savedEvent);
     }
 
     @Override
-    public EventDto getEventById(Integer id) {
+    public EventDto getEvent(Integer id) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new AppException("Event doesn't exist", HttpStatus.BAD_REQUEST));
 

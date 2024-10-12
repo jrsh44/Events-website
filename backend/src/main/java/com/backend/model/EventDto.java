@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +17,7 @@ public class EventDto {
     private int id;
     private String title;
     private String description;
-    private Date date;
+    private LocalDate date;
     private EventType type;
     private Boolean isArchived;
 }
