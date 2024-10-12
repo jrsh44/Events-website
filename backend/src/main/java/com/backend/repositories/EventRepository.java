@@ -6,12 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface EventRepository extends JpaRepository<Event, Long> {
+public interface EventRepository extends JpaRepository<Event, Integer> {
 
-    void deleteById(String id);
+    void deleteById(Integer id);
+    Event updateEventById(Integer id, Event event);
 
-    Optional<Event> findByTitle(String title);
-    Optional<Event[]> findAllByType(EventType type);
+    Optional<Event> findById(Integer id);
     Optional<Event[]> findAllByIsArchived();
 
 

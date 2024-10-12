@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
 
         if (passwordEncoder.matches(CharBuffer.wrap(credentialsDto.password()), user.getPassword())) {
-            return toUserDto(user);
+            return entityToDto(user);
         }
         throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
     }
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
         User savedUser = userRepository.save(user);
 
-        UserDto savedUserDto = toUserDto(savedUser);
+        UserDto savedUserDto = entityToDto(savedUser);
         savedUserDto.setToken(userAuthenticationProvider.createToken(savedUserDto));
 
         return savedUserDto;
@@ -62,13 +62,13 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
 
-        UserDto userDto = toUserDto(user);
+        UserDto userDto = entityToDto(user);
         userDto.setToken(userAuthenticationProvider.createToken(userDto));
 
         return userDto;
     }
 
-    private UserDto toUserDto(User user) {
+    private UserDto entityToDto(User user) {
         if (user == null) {
             return null;
         } else {
