@@ -1,12 +1,29 @@
 package com.backend.model;
 
 import com.backend.enums.Role;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public record UserCreateDto(
+        @NotBlank(message = "Imię jest wymagane.")
+        @Size(min = 3, message = "Imię musi mieć co najmniej 3 znaki.")
         String firstName,
+
+        @NotBlank(message = "Nazwisko jest wymagane.")
+        @Size(min = 3, message = "Nazwisko musi mieć co najmniej 3 znaki.")
         String lastName,
+
+        @NotBlank(message = "Email jest wymagany.")
+        @Email(message = "Email musi być w formacie: example@domain.com")
         String email,
-        char[] password,
+
+        @NotBlank(message = "Hasło jest wymagane.")
+        @Size(min = 8, message = "Hasło musi mieć co najmniej 8 znaków.")
+        String password,
+
+        @NotNull(message = "Rola jest wymagana.")
         Role role
 ) {
 }

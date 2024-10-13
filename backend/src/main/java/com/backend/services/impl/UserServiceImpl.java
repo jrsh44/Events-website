@@ -26,19 +26,19 @@ public class UserServiceImpl implements UserService {
 
     public UserDto login(CredentialsDto credentialsDto) {
         User user = userRepository.findByEmail(credentialsDto.email())
-                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AppException("Nieznany użytkownik", HttpStatus.NOT_FOUND));
 
         if (passwordEncoder.matches(CharBuffer.wrap(credentialsDto.password()), user.getPassword())) {
             return entityToDto(user);
         }
-        throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
+        throw new AppException("Niepoprawne dane logowania", HttpStatus.BAD_REQUEST);
     }
 
     public UserDto register(SignUpDto userDto) {
         Optional<User> optionalUser = userRepository.findByEmail(userDto.email());
 
         if (optionalUser.isPresent()) {
-            throw new AppException("Email is taken", HttpStatus.BAD_REQUEST);
+            throw new AppException("Email jest już zajęty", HttpStatus.BAD_REQUEST);
         }
 
         User user = User.builder()
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Integer id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new AppException("User doesn't exist", HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new AppException("Nieznany użytkownik", HttpStatus.BAD_REQUEST));
 
         userRepository.delete(user);
     }
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(Integer id, UserDto userDto) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new AppException("User doesn't exist", HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new AppException("Nieznany użytkownik", HttpStatus.BAD_REQUEST));
 
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
