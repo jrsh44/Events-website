@@ -23,7 +23,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    //    @PreAuthorize("hasAuthority('user:modify')")
+    @PreAuthorize("hasAuthority('user:modify')")
     @PostMapping
     public ResponseEntity<UserDto> addUser(@RequestBody @Valid UserCreateDto userDto) {
         UserDto user = userService.addUser(userDto);
