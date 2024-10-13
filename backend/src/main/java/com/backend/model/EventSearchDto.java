@@ -32,4 +32,7 @@ public class EventSearchDto {
 
     private int page = 0;
     private int take = 10;
+
+    private String sortBy = "date";
+    private String sortDirection = "asc";
 }

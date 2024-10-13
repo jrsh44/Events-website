@@ -1,7 +1,6 @@
 package com.backend.services.impl;
 
 import com.backend.data.Event;
-import com.backend.enums.EventType;
 import com.backend.exceptions.AppException;
 import com.backend.model.EventCreateDto;
 import com.backend.model.EventDto;
@@ -12,12 +11,11 @@ import com.backend.services.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
-import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -81,7 +79,11 @@ public class EventServiceImpl implements EventService {
                 .and(EventSpecification.hasType(eventSearchDto.getType()))
                 .and(EventSpecification.isArchived(eventSearchDto.getIsArchived()));
 
-        PageRequest pageable = PageRequest.of(eventSearchDto.getPage(), eventSearchDto.getTake());
+        Sort.Direction direction = eventSearchDto.getSortDirection().equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        Sort sort = Sort.by(direction, eventSearchDto.getSortBy());
+
+        PageRequest pageable = PageRequest.of(eventSearchDto.getPage(), eventSearchDto.getTake(), sort);
 
         Page<Event> resultPage = eventRepository.findAll(spec, pageable);
 
