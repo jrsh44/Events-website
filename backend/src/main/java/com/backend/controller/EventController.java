@@ -2,12 +2,15 @@ package com.backend.controller;
 
 import com.backend.model.EventCreateDto;
 import com.backend.model.EventDto;
+import com.backend.model.EventSearchDto;
 import com.backend.services.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("api/event")
@@ -44,10 +47,10 @@ public class EventController {
         return ResponseEntity.noContent().build();
     }
 
-//    @GetMapping("/archived")
-//    public ResponseEntity<EventDto[]> getEventArchived(@RequestBody @Valid EventTableDto eventTableDto) {
-//        EventDto[] eventsArchived = eventService.getArchivedEvents(eventTableDto);
-//        return ResponseEntity.ok(eventsArchived);
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<List<EventDto>> searchEvents(@RequestBody EventSearchDto eventSearchDto) {
+        List<EventDto> events = eventService.searchEvents(eventSearchDto);
+        return ResponseEntity.ok(events);
+    }
 
 }

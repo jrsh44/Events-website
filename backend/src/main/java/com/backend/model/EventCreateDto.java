@@ -4,10 +4,11 @@ import com.backend.enums.EventType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
 import java.time.LocalDate;
 
-
+@Builder
 public record EventCreateDto(
         @NotBlank(message = "Tytuł jest wymagany.")
         @Size(max = 100, message = "Tytuł nie może przekraczać 100 znaków.")

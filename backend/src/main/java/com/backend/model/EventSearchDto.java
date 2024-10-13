@@ -14,15 +14,22 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class EventDto {
+public class EventSearchDto {
 
-    private int id;
     private String title;
     private String description;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private LocalDate date;
+    private LocalDate dateFrom;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    private LocalDate dateTo;
+
     private EventType type;
     private Boolean isArchived;
+
+    private int page = 0;
+    private int take = 10;
 }
