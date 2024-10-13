@@ -103,6 +103,7 @@ public class UserServiceImpl implements UserService {
         return entityToDto(user);
     }
 
+    @Override
     public UserDto findByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));

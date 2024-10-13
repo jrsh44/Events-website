@@ -24,7 +24,7 @@ import java.util.Date;
 @Component
 public class UserAuthenticationProvider {
 
-    @Value("${security.jwt.token.secret-key:secret-key}")
+    @Value("${SPRING_SECRET_KEY}")
     private String secretKey;
 
     @Autowired
