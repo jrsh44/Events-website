@@ -1,5 +1,6 @@
 package com.backend.services;
 
+import com.backend.model.PasswordUpdateDto;
 import com.backend.model.RestartCredentialsDto;
 
 public interface PasswordService {
@@ -8,5 +9,5 @@ public interface PasswordService {
 
     boolean validateResetToken(String token);
 
-    void updatePassword(String token, String newPassword);
+    void updatePassword(String token, PasswordUpdateDto passwordUpdateDto);
 }

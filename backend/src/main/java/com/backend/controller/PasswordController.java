@@ -1,5 +1,6 @@
 package com.backend.controller;
 
+import com.backend.model.PasswordUpdateDto;
 import com.backend.model.RestartCredentialsDto;
 import com.backend.services.PasswordService;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,8 @@ public class PasswordController {
 //    }
 
     @PostMapping("/update-password")
-    public ResponseEntity<String> updatePassword(@RequestParam("token") String token, @RequestBody String password) {
-        passwordService.updatePassword(token, password);
+    public ResponseEntity<String> updatePassword(@RequestParam("token") String token, @RequestBody PasswordUpdateDto passwordUpdateDto) {
+        passwordService.updatePassword(token, passwordUpdateDto);
         return ResponseEntity.ok("Hasło zostało zaktualizowane.");
     }
 

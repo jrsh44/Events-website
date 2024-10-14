@@ -3,6 +3,7 @@ package com.backend.services.impl;
 import com.backend.data.PasswordResetToken;
 import com.backend.data.User;
 import com.backend.exceptions.AppException;
+import com.backend.model.PasswordUpdateDto;
 import com.backend.model.RestartCredentialsDto;
 import com.backend.repositories.PasswordResetTokenRepository;
 import com.backend.repositories.UserRepository;
@@ -47,11 +48,11 @@ public class PasswordServiceImpl implements PasswordService {
         return resetTokenOptional.isPresent() && resetTokenOptional.get().getExpiryDate().isAfter(LocalDateTime.now());
     }
 
-    public void updatePassword(String token, String newPassword) {
+    public void updatePassword(String token, PasswordUpdateDto passwordUpdateDto) {
         Optional<PasswordResetToken> resetTokenOptional = passwordResetTokenRepository.findByToken(token);
         if (resetTokenOptional.isPresent() && resetTokenOptional.get().getExpiryDate().isAfter(LocalDateTime.now())) {
             User user = resetTokenOptional.get().getUser();
-            user.setPassword(passwordEncoder.encode(newPassword));
+            user.setPassword(passwordEncoder.encode(passwordUpdateDto.password()));
             userRepository.save(user);
 
             passwordResetTokenRepository.delete(resetTokenOptional.get());
