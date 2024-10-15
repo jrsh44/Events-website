@@ -42,7 +42,7 @@ const routes = [
       },
       {
         element: <PagePasswordReset />,
-        path: `${EPath.PasswordReset}/:token`,
+        path: EPath.PasswordReset,
       },
       {
         element: <PageError />,
