@@ -36,8 +36,7 @@ export const theme = {
   transition: {
     duration: "0.3s",
     timingFunction: "ease-in-out",
-    property:
-      "color, background-color, border-color, opacity, box-shadow, transform, padding, stroke, fill",
+    property: "border-color, opacity, box-shadow, transform, padding, stroke, fill",
   },
 };
 

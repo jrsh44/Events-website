@@ -1,12 +1,13 @@
 import { createGlobalStyle, css, ThemeProvider } from "styled-components";
-import { App } from "../App";
 import { theme } from "../consts/theme";
 import normalize from "styled-normalize";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router";
 
 export const Provider = () => (
   <ThemeProvider theme={theme}>
     <GlobalStyle />
-    <App />
+    <RouterProvider router={router} />
   </ThemeProvider>
 );
 
