@@ -3,12 +3,19 @@ import { theme } from "../consts/theme";
 import normalize from "styled-normalize";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router";
+import { IntlProvider } from "./intl";
+import { Provider as ReduxProvider } from "react-redux";
+import { store } from "./store";
 
 export const Provider = () => (
-  <ThemeProvider theme={theme}>
-    <GlobalStyle />
-    <RouterProvider router={router} />
-  </ThemeProvider>
+  <ReduxProvider store={store}>
+    <IntlProvider>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </IntlProvider>
+  </ReduxProvider>
 );
 
 const GlobalStyle = createGlobalStyle`
