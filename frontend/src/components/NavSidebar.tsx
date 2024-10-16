@@ -1,6 +1,6 @@
 import { t } from "@/providers/intl";
 import { EPath } from "@/providers/router";
-import { HomeIcon, UserIcon, UsersIcon } from "lucide-react";
+import { HomeIcon, TicketsIcon, UserIcon, UsersIcon } from "lucide-react";
 import { ReactNode, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import logoSvg from "@/assets/logo.svg";
@@ -25,7 +25,7 @@ export const NavSidebar = () => {
     {
       titleTrKey: "nav.events",
       to: EPath.Events,
-      Icon: <HomeIcon />,
+      Icon: <TicketsIcon />,
     },
     {
       titleTrKey: "nav.profile",

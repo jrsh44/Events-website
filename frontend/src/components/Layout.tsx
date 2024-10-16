@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { NavSidebar } from "./NavSidebar";
+import { ScrollArea } from "./ui/scroll-area";
 
 export const AuthLayout = () => (
   <div className="flex h-screen flex-col">
@@ -12,8 +13,8 @@ export const AuthLayout = () => (
 export const MainLayout = () => (
   <div className="relative flex h-[100vh] w-full">
     <NavSidebar />
-    <div className=" relative flex flex-col max-w-full h-full flex-1 p-10 gap-10 overflow-y-auto">
+    <ScrollArea className=" relative flex flex-col max-w-full h-full flex-1 overflow-y-auto">
       <Outlet />
-    </div>
+    </ScrollArea>
   </div>
 );

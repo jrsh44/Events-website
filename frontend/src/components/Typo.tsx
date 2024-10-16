@@ -49,11 +49,13 @@ export const TypoH5 = (props: ITypoProps) => (
 );
 
 export const TypoLarge = (props: ITypoProps) => (
-  <span className={cn("text-lg font-semibold", props.className)}>{props.children}</span>
+  <div className={cn("text-lg font-semibold", props.className)}>{props.children}</div>
 );
 
-export const TypoBody = (props: ITypoProps) => <h1 className="text-base">{props.children}</h1>;
+export const TypoBody = (props: ITypoProps) => (
+  <div className={cn("text-base", props.className)}>{props.children}</div>
+);
 
-export const TypoSmall = (props: ITypoProps) => (
-  <span className={cn("text-sm font-medium leading-none", props.className)}>{props.children}</span>
+export const TypoValidation = (props: ITypoProps) => (
+  <div className={cn("text-sm h-4 text-red-500", props.className)}>{props.children}</div>
 );

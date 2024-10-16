@@ -15,6 +15,7 @@ export const ButtonLink = (props: IButtonLinkProps) => (
     )}
     onClick={props.onClick}
     disabled={!!props.disabled}
+    type="button"
   >
     {props.children}
   </button>

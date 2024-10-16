@@ -23,17 +23,35 @@ export class ApiService {
     store.dispatch(appActions.incrementLoadingCount());
 
     try {
+      const headers = new Headers({
+        "Content-Type": "application/json",
+      });
+
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.append("Authorization", `Bearer ${token}`);
+      }
+
       const response = await fetch(`${apiUrl}${request.url}`, {
         method: request.method,
         body: request.body,
-        headers: new Headers({
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        }),
+        headers,
       });
 
-      return response;
-      
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (data.errorCode && data.errorMessage)
+          store.dispatch(
+            appActions.setToast({
+              title: data.errorCode,
+              description: data.errorMessage,
+              variant: "destructive",
+            }),
+          );
+      }
+
+      return data;
     } catch (error) {
       const responseError = error as Response;
       let parsedError = null;

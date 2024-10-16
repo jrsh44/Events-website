@@ -7,6 +7,8 @@ export const pl = {
   "login.forgotPassword": "Zapomniałeś hasła?",
   "login.noAccount": "Nie masz konta?",
   "login.register": "Zarejestruj się",
+  "login.errors.email": "Email jest wymagany",
+  "login.errors.password": "Hasło jest wymagane",
 
   // Register
   "register.title": "Rejestracja",
@@ -18,6 +20,11 @@ export const pl = {
   "register.submit": "Zarejestruj się",
   "register.alreadyHaveAccount": "Masz już konto?",
   "register.login": "Zaloguj się",
+  "register.errors.firstName": "Imię jest wymagane",
+  "register.errors.lastName": "Nazwisko jest wymagane",
+  "register.errors.email": "Email jest wymagany",
+  "register.errors.password": "Hasło jest wymagane",
+  "register.errors.confirmPassword": "Hasła muszą być identyczne",
 
   // PasswordForgot
   "passwordForgot.title": "Przywrócenie hasła",
