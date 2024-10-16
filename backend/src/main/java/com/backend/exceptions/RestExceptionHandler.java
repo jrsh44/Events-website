@@ -35,6 +35,12 @@ public class RestExceptionHandler {
                 .body(new ErrorDto(ex.getMessage()));
     }
 
+    @ExceptionHandler(TokenException.class)
+    public ResponseEntity<ErrorResponse> handleTokenException() {
+        ErrorResponse errorResponse = new ErrorResponse("ES-02", "Token jest niepoprawny lub wygasł");
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(EmailTakenException.class)
     public ResponseEntity<ErrorResponse> handleEmailTakenException() {
         ErrorResponse errorResponse = new ErrorResponse("ES-03", "Email jest już zajęty");
