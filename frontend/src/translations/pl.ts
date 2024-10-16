@@ -31,4 +31,18 @@ export const pl = {
   "passwordReset.password": "Nowe hasło",
   "passwordReset.confirmPassword": "Potwierdź hasło",
   "passwordReset.submit": "Zresetuj",
+
+
+  // Table 
+  "table.noData": "Brak danych",
+  "table.paggination.description": "Strona {page} z {maxPage}",
+  "table.paggination.next": "Następna",
+  "table.paggination.prev": "Poprzednia",
+
+
+  // NotFound
+
+  "notFound.title": "404",
+  "notFound.description": "Strona nie znaleziona",
+  "notFound.goHome": "Wróć na stronę główną",
 };

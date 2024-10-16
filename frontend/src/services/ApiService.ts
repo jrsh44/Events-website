@@ -32,10 +32,8 @@ export class ApiService {
         }),
       });
 
-      if (!response.ok) throw new Error("Fetch failed");
-      if (response.headers.get("Content-Type")?.includes("application/json"))
-        return await response.json();
       return response;
+      
     } catch (error) {
       const responseError = error as Response;
       let parsedError = null;

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IEventDto, IUserDto } from "../models/dto";
+import { ToastProps } from "@/components/ui/toast";
 
 interface IAppSlice {
   loadingCount: number;
@@ -7,6 +8,7 @@ interface IAppSlice {
   events: IEventDto[];
   eventsArchived: IEventDto[];
   users: IUserDto[];
+  toast?: ToastProps;
 }
 
 const initialState: IAppSlice = {

@@ -10,6 +10,7 @@ import { PagePasswordReset } from "../pages/PasswordReset/PagePasswordReset";
 import { PageProfile } from "../pages/Profile/PageProfile";
 import { PageRegister } from "../pages/Register/PageRegister";
 import { PageUsers } from "../pages/Users/PageUsers";
+import { PageNotFound } from "@/pages/NotFound/PageNotFound";
 
 export enum EPath {
   ArchivedEvents = "/archived-events",
@@ -22,6 +23,7 @@ export enum EPath {
   Register = "/register",
   Profile = "/profile",
   Users = "/users",
+  NotFound = "*",
 }
 
 const routes = [
@@ -73,6 +75,10 @@ const routes = [
         element: <PageUsers />,
         path: EPath.Users,
       },
+      {
+        element: <PageNotFound />,
+        path: EPath.NotFound, 
+      }
     ],
   },
 ];
