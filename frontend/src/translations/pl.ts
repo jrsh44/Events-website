@@ -32,13 +32,19 @@ export const pl = {
   "passwordReset.confirmPassword": "Potwierdź hasło",
   "passwordReset.submit": "Zresetuj",
 
-
-  // Table 
+  // Table
   "table.noData": "Brak danych",
   "table.paggination.description": "Strona {page} z {maxPage}",
   "table.paggination.next": "Następna",
   "table.paggination.prev": "Poprzednia",
 
+  // NavSidebar
+  "nav.home": "Ekran główny",
+  "nav.events": "Wydarzenia",
+  "nav.profile": "Profil",
+  "nav.users": "Użytkownicy",
+  "nav.footer.welcome": "Cześć,",
+  "nav.footer.logout": "Wyloguj się",
 
   // NotFound
 

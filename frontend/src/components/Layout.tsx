@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { NavSidebar } from "./NavSidebar";
 
 export const AuthLayout = () => (
   <div className="flex h-screen flex-col">
@@ -9,7 +10,10 @@ export const AuthLayout = () => (
 );
 
 export const MainLayout = () => (
-  <div className="flex flex-col w-full h-full p-10 gap-10 overflow-y-auto">
-    <Outlet />
+  <div className="relative flex h-[100vh] w-full">
+    <NavSidebar />
+    <div className=" relative flex flex-col max-w-full h-full flex-1 p-10 gap-10 overflow-y-auto">
+      <Outlet />
+    </div>
   </div>
 );
