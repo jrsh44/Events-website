@@ -1,8 +1,8 @@
 package com.backend.enums;
 
 public enum EventType {
-    CONCERT,
-    STANDUP,
+    WORKSHOP,
+    CONFERENCE,
     INTERVIEW,
     OTHER
 }
