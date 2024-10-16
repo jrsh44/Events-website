@@ -2,6 +2,7 @@ package com.backend.exceptions;
 
 
 import com.backend.model.ErrorDto;
+import com.backend.model.ErrorResponse;
 import com.backend.model.ValidationDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
