@@ -1,3 +1,4 @@
+import { ButtonLink } from "@/components/ButtonLink";
 import { TypoBody } from "@/components/Typo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -43,11 +44,9 @@ export const PageRegister = () => {
         </form>
         <Button className="mt-10 w-full">{t("register.submit")}</Button>
         <Separator className="mt-6 mb-6" />
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center gap-2">
           <TypoBody>{t("register.alreadyHaveAccount")}</TypoBody>
-          <Button variant="link" onClick={() => navigate(EPath.Login)}>
-            {t("register.login")}
-          </Button>
+          <ButtonLink onClick={() => navigate(EPath.Login)}>{t("register.login")}</ButtonLink>
         </div>
       </CardContent>
     </Card>
