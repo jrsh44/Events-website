@@ -1,7 +1,7 @@
 package com.backend.services.impl;
 
 import com.backend.data.Event;
-import com.backend.exceptions.AppException;
+import com.backend.exceptions.UnknownEventException;
 import com.backend.model.EventCreateDto;
 import com.backend.model.EventDto;
 import com.backend.model.EventSearchDto;
@@ -27,7 +27,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public void deleteEvent(Integer id) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(() -> new AppException("Event doesn't exist", HttpStatus.BAD_REQUEST));
+                .orElseThrow(UnknownEventException::new);
 
         eventRepository.delete(event);
     }
@@ -51,7 +51,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventDto updateEvent(Integer id, EventDto eventDto) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(() -> new AppException("Event doesn't exist", HttpStatus.BAD_REQUEST));
+                .orElseThrow(UnknownEventException::new);
 
         event.setTitle(eventDto.getTitle());
         event.setDescription(eventDto.getDescription());
@@ -66,7 +66,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventDto getEvent(Integer id) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(() -> new AppException("Event doesn't exist", HttpStatus.BAD_REQUEST));
+                .orElseThrow(UnknownEventException::new);
 
         return entityToDto(event);
     }

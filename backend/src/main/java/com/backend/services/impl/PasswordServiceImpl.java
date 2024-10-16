@@ -2,7 +2,8 @@ package com.backend.services.impl;
 
 import com.backend.data.PasswordResetToken;
 import com.backend.data.User;
-import com.backend.exceptions.AppException;
+import com.backend.exceptions.TokenException;
+import com.backend.exceptions.UnknownUserException;
 import com.backend.model.PasswordUpdateDto;
 import com.backend.model.RestartCredentialsDto;
 import com.backend.repositories.PasswordResetTokenRepository;
@@ -10,7 +11,6 @@ import com.backend.repositories.UserRepository;
 import com.backend.services.EmailService;
 import com.backend.services.PasswordService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +30,7 @@ public class PasswordServiceImpl implements PasswordService {
 
     public void initiatePasswordReset(RestartCredentialsDto restartCredentialsDto) {
         User user = userRepository.findByEmail(restartCredentialsDto.email())
-                .orElseThrow(() -> new AppException("Nie odnaleziono użytkownika o podanym mailu", HttpStatus.BAD_REQUEST));
+                .orElseThrow(UnknownUserException::new);
 
         String token = UUID.randomUUID().toString();
 
@@ -57,7 +57,7 @@ public class PasswordServiceImpl implements PasswordService {
 
             passwordResetTokenRepository.delete(resetTokenOptional.get());
         } else {
-            throw new RuntimeException("Token jest nieprawidłowy lub wygasł.");
+            throw new TokenException("Token jest niepoprawny lub wygasł");
         }
     }
 }

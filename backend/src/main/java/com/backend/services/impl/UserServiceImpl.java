@@ -2,7 +2,9 @@ package com.backend.services.impl;
 
 import com.backend.data.User;
 import com.backend.enums.Role;
-import com.backend.exceptions.AppException;
+import com.backend.exceptions.LoginException;
+import com.backend.exceptions.EmailTakenException;
+import com.backend.exceptions.UnknownUserException;
 import com.backend.model.CredentialsDto;
 import com.backend.model.SignUpDto;
 import com.backend.model.UserCreateDto;
@@ -10,7 +12,6 @@ import com.backend.model.UserDto;
 import com.backend.repositories.UserRepository;
 import com.backend.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,19 +27,19 @@ public class UserServiceImpl implements UserService {
 
     public UserDto login(CredentialsDto credentialsDto) {
         User user = userRepository.findByEmail(credentialsDto.email())
-                .orElseThrow(() -> new AppException("Nieznany użytkownik", HttpStatus.NOT_FOUND));
+                .orElseThrow(LoginException::new);
 
         if (passwordEncoder.matches(CharBuffer.wrap(credentialsDto.password()), user.getPassword())) {
             return entityToDto(user);
         }
-        throw new AppException("Niepoprawne dane logowania", HttpStatus.BAD_REQUEST);
+        throw new LoginException();
     }
 
     public UserDto register(SignUpDto userDto) {
         Optional<User> optionalUser = userRepository.findByEmail(userDto.email());
 
         if (optionalUser.isPresent()) {
-            throw new AppException("Email jest już zajęty", HttpStatus.BAD_REQUEST);
+            throw new EmailTakenException();
         }
 
         User user = User.builder()
@@ -59,7 +60,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Integer id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new AppException("Nieznany użytkownik", HttpStatus.BAD_REQUEST));
+                .orElseThrow(UnknownUserException::new);
 
         userRepository.delete(user);
     }
@@ -83,7 +84,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(Integer id, UserDto userDto) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new AppException("Nieznany użytkownik", HttpStatus.BAD_REQUEST));
+                .orElseThrow(UnknownUserException::new);
 
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
@@ -98,7 +99,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUser(Integer id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new AppException("User doesn't exist", HttpStatus.BAD_REQUEST));
+                .orElseThrow(UnknownUserException::new);
 
         return entityToDto(user);
     }
@@ -106,7 +107,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto findByEmail(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+                .orElseThrow(UnknownUserException::new);
 
         return entityToDto(user);
     }
