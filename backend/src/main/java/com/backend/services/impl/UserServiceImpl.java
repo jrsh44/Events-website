@@ -59,9 +59,7 @@ public class UserServiceImpl implements UserService {
 
         User savedUser = userRepository.save(user);
 
-        UserDto savedUserDto = entityToDto(savedUser);
-
-        return savedUserDto;
+        return entityToDto(savedUser);
     }
 
     @Override
@@ -84,6 +82,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto addUser(UserCreateDto userCreateDto) {
+        Optional<User> optionalUser = userRepository.findByEmail(userCreateDto.email());
+
+        if (optionalUser.isPresent()) {
+            throw new EmailTakenException();
+        }
 
         User user = User.builder()
                 .firstName(userCreateDto.firstName())
@@ -102,6 +105,15 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(Integer id, UserDto userDto) {
         User user = userRepository.findById(id)
                 .orElseThrow(UnknownUserException::new);
+
+        Optional<User> optionalUser = userRepository.findByEmail(userDto.getEmail());
+
+        if (optionalUser.isPresent()) {
+            User existingUser = optionalUser.get();
+
+            if (!existingUser.getId().equals(user.getId())) {
+                throw new EmailTakenException();
+            }        }
 
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());

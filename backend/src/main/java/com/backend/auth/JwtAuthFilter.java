@@ -33,6 +33,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                             userAuthenticationProvider.validateToken(authElements[1]));
 
                 } catch (RuntimeException e) {
+                    request.setAttribute("authException", e);
                     SecurityContextHolder.clearContext();
                     throw e;
                 }

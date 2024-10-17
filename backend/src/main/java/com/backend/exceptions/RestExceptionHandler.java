@@ -1,8 +1,7 @@
 package com.backend.exceptions;
 
 
-import com.backend.model.ErrorDto;
-import com.backend.model.ErrorResponse;
+import com.backend.model.AppResponse;
 import com.backend.model.ValidationDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,47 +27,52 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(validationDto, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(AppException.class)
-    public ResponseEntity<ErrorDto> handleAppException(AppException ex) {
-        return ResponseEntity
-                .status(ex.getStatus())
-                .body(new ErrorDto(ex.getMessage()));
-    }
-
-    @ExceptionHandler(UserTokenException.class)
-    public ResponseEntity<ErrorResponse> handleUserTokenException(UserTokenException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("ES-02", ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
-    }
-
     @ExceptionHandler(EmailTakenException.class)
-    public ResponseEntity<ErrorResponse> handleEmailTakenException() {
-        ErrorResponse errorResponse = new ErrorResponse("ES-03", "Email jest już zajęty");
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    public ResponseEntity<AppResponse> handleEmailTakenException() {
+        AppResponse appResponse = new AppResponse("ES-03", "Email jest już zajęty");
+        return new ResponseEntity<>(appResponse, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(LoginException.class)
-    public ResponseEntity<ErrorResponse> handleLoginException() {
-        ErrorResponse errorResponse = new ErrorResponse("ES-04", "Niepoprawne dane logowania");
-        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<AppResponse> handleLoginException() {
+        AppResponse appResponse = new AppResponse("ES-04", "Niepoprawne dane logowania");
+        return new ResponseEntity<>(appResponse, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(UnknownUserException.class)
-    public ResponseEntity<ErrorResponse> handleUnknownUserException() {
-        ErrorResponse errorResponse = new ErrorResponse("ES-05", "Nie odnaleziono takiego użytkownika");
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<AppResponse> handleUnknownUserException() {
+        AppResponse appResponse = new AppResponse("ES-05", "Nie odnaleziono takiego użytkownika");
+        return new ResponseEntity<>(appResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UnknownEventException.class)
-    public ResponseEntity<ErrorResponse> handleUnknownEventException() {
-        ErrorResponse errorResponse = new ErrorResponse("ES-06", "Nie odnaleziono takiego wydarzenia");
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<AppResponse> handleUnknownEventException() {
+        AppResponse appResponse = new AppResponse("ES-06", "Nie odnaleziono takiego wydarzenia");
+        return new ResponseEntity<>(appResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ResetTokenException.class)
-    public ResponseEntity<ErrorResponse> handleResetTokenException() {
-        ErrorResponse errorResponse = new ErrorResponse("ES-07", "Token jest błędny lub stracił ważność");
-        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<AppResponse> handleResetTokenException() {
+        AppResponse appResponse = new AppResponse("ES-07", "Token jest błędny lub stracił ważność");
+        return new ResponseEntity<>(appResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ExpiredTokenException.class)
+    public ResponseEntity<AppResponse> handleExpiredTokenException() {
+        AppResponse appResponse = new AppResponse("AUTH-01", "Token stracił swoją ważność");
+        return new ResponseEntity<>(appResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(InvalidTokenFormatException.class)
+    public ResponseEntity<AppResponse> handleInvalidTokenFormatException() {
+        AppResponse appResponse = new AppResponse("AUTH-02", "Token jest niepoprawny");
+        return new ResponseEntity<>(appResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserTokenException.class)
+    public ResponseEntity<AppResponse> handleUserTokenException(UserTokenException ex) {
+        AppResponse appResponse = new AppResponse("AUTH-03", ex.getMessage());
+        return new ResponseEntity<>(appResponse, HttpStatus.UNAUTHORIZED);
     }
 
 

@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.util.Map;
 
 @Getter
-public class ValidationDto extends ErrorResponse {
+public class ValidationDto extends AppResponse {
     private final Map<String, String> validationErrors;
 
     public ValidationDto(String errorCode, String errorMessage, Map<String, String> validationErrors ) {

@@ -3,8 +3,12 @@ package com.backend.auth;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.backend.enums.Role;
+import com.backend.exceptions.ExpiredTokenException;
+import com.backend.exceptions.InvalidTokenFormatException;
 import com.backend.model.UserDto;
 import com.backend.services.UserService;
 import jakarta.annotation.PostConstruct;
@@ -51,19 +55,29 @@ public class UserAuthenticationProvider {
     public Authentication validateToken(String token) {
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
-        JWTVerifier verifier = JWT.require(algorithm)
-                .build();
+        try {
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            DecodedJWT decoded = verifier.verify(token);
 
-        DecodedJWT decoded = verifier.verify(token);
+            String email = decoded.getSubject();
+            if (email == null) {
+                throw new InvalidTokenFormatException();
+            }
 
-        String email = decoded.getSubject();
+            UserDto user = userService.findByEmail(email);
+            if (user == null) {
+                throw new InvalidTokenFormatException();
+            }
 
-        UserDto user = userService.findByEmail(email);
+            Role userRole = user.getRole();
+            Collection<? extends GrantedAuthority> authorities = userRole.getAuthorities();
 
-        Role userRole = user.getRole();
-        Collection<? extends GrantedAuthority> authorities = userRole.getAuthorities();
+            return new UsernamePasswordAuthenticationToken(email, null, authorities);
 
-        return new UsernamePasswordAuthenticationToken(email, null, authorities);
+        } catch (TokenExpiredException e) {
+            throw new ExpiredTokenException();
+        } catch (JWTVerificationException e) {
+            throw new InvalidTokenFormatException();
+        }
     }
-
 }
