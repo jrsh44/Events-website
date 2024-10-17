@@ -20,14 +20,14 @@ public class PasswordController {
         return ResponseEntity.ok("Wysłano link do resetowania hasła na podany adres e-mail.");
     }
 
-//    @GetMapping("/reset-password")
-//    public ResponseEntity<String> resetPasswordPage(@RequestParam("token") String token) {
-//        if (passwordService.validateResetToken(token)) {
-//            return ResponseEntity.ok("Token jest prawidłowy, możesz zresetować hasło.");
-//        } else {
-//            return ResponseEntity.badRequest().body("Token jest nieprawidłowy lub wygasł.");
-//        }
-//    }
+    @GetMapping("/reset-password")
+    public ResponseEntity<String> resetPasswordPage(@RequestParam("token") String token) {
+        if (passwordService.validateResetToken(token)) {
+            return ResponseEntity.ok("Token jest prawidłowy, możesz zresetować hasło.");
+        } else {
+            return ResponseEntity.badRequest().body("Token jest nieprawidłowy lub wygasł.");
+        }
+    }
 
     @PostMapping("/update-password")
     public ResponseEntity<String> updatePassword(@RequestParam("token") String token, @RequestBody PasswordUpdateDto passwordUpdateDto) {

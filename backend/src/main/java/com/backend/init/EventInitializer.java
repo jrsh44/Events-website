@@ -24,23 +24,28 @@ public class EventInitializer {
     @Bean
     public CommandLineRunner initializeEvents() {
         return args -> {
-            List<Event> events = new ArrayList<>();
-            Random random = new Random();
+            long eventCount = eventRepository.count();
+            if (eventCount < 40) {
+                List<Event> events = new ArrayList<>();
+                Random random = new Random();
 
-            for (int i = 1; i <= 40; i++) {
-                Event event = Event.builder()
-                        .title(generateRandomTitle(i))
-                        .description(generateRandomDescription())
-                        .date(generateRandomDate())
-                        .type(generateRandomEventType())
-                        .isArchived(random.nextBoolean())
-                        .build();
+                for (int i = 1; i <= 40 - eventCount; i++) {
+                    Event event = Event.builder()
+                            .title(generateRandomTitle((int) eventCount + i))
+                            .description(generateRandomDescription())
+                            .date(generateRandomDate())
+                            .type(generateRandomEventType())
+                            .isArchived(random.nextBoolean())
+                            .build();
 
-                events.add(event);
+                    events.add(event);
+                }
+
+                eventRepository.saveAll(events);
+                System.out.println((40 - eventCount) + " random events have been initialized!");
+            } else {
+                System.out.println("There are already 40 or more events, no need to initialize more.");
             }
-
-            eventRepository.saveAll(events);
-            System.out.println("40 random events have been initialized!");
         };
     }
 

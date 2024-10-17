@@ -1,7 +1,6 @@
 package com.backend.controller;
 
-import com.backend.model.UserCreateDto;
-import com.backend.model.UserDto;
+import com.backend.model.*;
 import com.backend.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +41,13 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasAuthority('user:read')")
+    @PostMapping("/search")
+    public ResponseEntity<SearchResultDto<UserDto>> searchEvents(@RequestBody UserFiltersDto userFiltersDto) {
+        SearchResultDto<UserDto> events = userService.searchUsers(userFiltersDto);
+        return ResponseEntity.ok(events);
     }
 
 

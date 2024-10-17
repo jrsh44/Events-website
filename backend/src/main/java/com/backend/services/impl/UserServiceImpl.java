@@ -1,21 +1,25 @@
 package com.backend.services.impl;
 
+import com.backend.data.Event;
 import com.backend.data.User;
 import com.backend.enums.Role;
 import com.backend.exceptions.LoginException;
 import com.backend.exceptions.EmailTakenException;
 import com.backend.exceptions.UnknownUserException;
-import com.backend.model.CredentialsDto;
-import com.backend.model.SignUpDto;
-import com.backend.model.UserCreateDto;
-import com.backend.model.UserDto;
+import com.backend.model.*;
 import com.backend.repositories.UserRepository;
+import com.backend.repositories.UserSpecification;
 import com.backend.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.nio.CharBuffer;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -110,6 +114,28 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(UnknownUserException::new);
 
         return entityToDto(user);
+    }
+
+    @Override
+    public SearchResultDto<UserDto> searchUsers(UserFiltersDto userFiltersDto) {
+        Specification<User> spec = Specification
+                .where(UserSpecification.hasEmail(userFiltersDto.getEmail()))
+                .and(UserSpecification.hasFirstName(userFiltersDto.getFirstName())
+                .and(UserSpecification.hasLastName(userFiltersDto.getLastName()))
+                .and(UserSpecification.hasRole(userFiltersDto.getRole())));
+
+        Sort.Direction direction = userFiltersDto.getSortDirection().equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        Sort sort = Sort.by(direction, userFiltersDto.getSortBy());
+
+        PageRequest pageable = PageRequest.of(userFiltersDto.getPage(), userFiltersDto.getTake(), sort);
+
+        Page<User> resultPage = userRepository.findAll(spec, pageable);
+
+        List<UserDto> eventDtos = resultPage.getContent().stream().map(this::entityToDto).toList();
+        long totalRecords = resultPage.getTotalElements();
+
+        return new SearchResultDto<>(eventDtos, totalRecords);
     }
 
     private UserDto entityToDto(User user) {

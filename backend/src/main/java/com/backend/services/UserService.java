@@ -1,9 +1,6 @@
 package com.backend.services;
 
-import com.backend.model.CredentialsDto;
-import com.backend.model.SignUpDto;
-import com.backend.model.UserCreateDto;
-import com.backend.model.UserDto;
+import com.backend.model.*;
 
 public interface UserService {
 
@@ -20,6 +17,9 @@ public interface UserService {
     UserDto getUser(Integer userId);
 
     UserDto findByEmail(String email);
+
+    SearchResultDto<UserDto> searchUsers(UserFiltersDto userFiltersDto);
+
 
 }
 
