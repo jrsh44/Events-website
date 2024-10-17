@@ -2,15 +2,14 @@ package com.backend.controller;
 
 import com.backend.model.EventCreateDto;
 import com.backend.model.EventDto;
-import com.backend.model.EventSearchDto;
+import com.backend.model.EventFiltersDto;
+import com.backend.model.SearchResultDto;
 import com.backend.services.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("api/event")
@@ -47,9 +46,16 @@ public class EventController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<EventDto>> searchEvents(@RequestBody EventSearchDto eventSearchDto) {
-        List<EventDto> events = eventService.searchEvents(eventSearchDto);
+    @PreAuthorize("hasAuthority('event:read')")
+    @PostMapping("/search")
+    public ResponseEntity<SearchResultDto<EventDto>> searchEvents(@RequestBody EventFiltersDto eventSearchDto) {
+        SearchResultDto<EventDto> events = eventService.searchEvents(eventSearchDto);
+        return ResponseEntity.ok(events);
+    }
+
+    @PostMapping("/archived-search")
+    public ResponseEntity<SearchResultDto<EventDto>> searchArchivedEvents(@RequestBody EventFiltersDto eventSearchDto) {
+        SearchResultDto<EventDto> events = eventService.searchArchivedEvents(eventSearchDto);
         return ResponseEntity.ok(events);
     }
 

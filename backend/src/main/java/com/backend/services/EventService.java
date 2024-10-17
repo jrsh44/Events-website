@@ -2,7 +2,8 @@ package com.backend.services;
 
 import com.backend.model.EventCreateDto;
 import com.backend.model.EventDto;
-import com.backend.model.EventSearchDto;
+import com.backend.model.EventFiltersDto;
+import com.backend.model.SearchResultDto;
 
 import java.util.List;
 
@@ -16,5 +17,7 @@ public interface EventService {
 
     EventDto getEvent(Integer eventId);
 
-    List<EventDto> searchEvents(EventSearchDto eventSearchDto);
+    SearchResultDto<EventDto> searchEvents(EventFiltersDto eventSearchDto);
+
+    SearchResultDto<EventDto> searchArchivedEvents(EventFiltersDto eventSearchDto);
 }

@@ -4,7 +4,8 @@ import com.backend.data.Event;
 import com.backend.exceptions.UnknownEventException;
 import com.backend.model.EventCreateDto;
 import com.backend.model.EventDto;
-import com.backend.model.EventSearchDto;
+import com.backend.model.EventFiltersDto;
+import com.backend.model.SearchResultDto;
 import com.backend.repositories.EventRepository;
 import com.backend.repositories.EventSpecification;
 import com.backend.services.EventService;
@@ -13,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,15 +70,29 @@ public class EventServiceImpl implements EventService {
 
         return entityToDto(event);
     }
-
     @Override
-    public List<EventDto> searchEvents(EventSearchDto eventSearchDto) {
+    public SearchResultDto<EventDto> searchEvents(EventFiltersDto eventSearchDto) {
         Specification<Event> spec = Specification
                 .where(EventSpecification.hasTitle(eventSearchDto.getTitle()))
                 .and(EventSpecification.hasDateRange(eventSearchDto.getDateFrom(), eventSearchDto.getDateTo()))
                 .and(EventSpecification.hasType(eventSearchDto.getType()))
-                .and(EventSpecification.isArchived(eventSearchDto.getIsArchived()));
+                .and(EventSpecification.isArchived(false));
 
+        return getEventDtos(eventSearchDto, spec);
+    }
+
+    @Override
+    public SearchResultDto<EventDto> searchArchivedEvents(EventFiltersDto eventSearchDto) {
+        Specification<Event> spec = Specification
+                .where(EventSpecification.hasTitle(eventSearchDto.getTitle()))
+                .and(EventSpecification.hasDateRange(eventSearchDto.getDateFrom(), eventSearchDto.getDateTo()))
+                .and(EventSpecification.hasType(eventSearchDto.getType()))
+                .and(EventSpecification.isArchived(true));
+
+        return getEventDtos(eventSearchDto, spec);
+    }
+
+    private SearchResultDto<EventDto> getEventDtos(EventFiltersDto eventSearchDto, Specification<Event> spec) {
         Sort.Direction direction = eventSearchDto.getSortDirection().equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
 
         Sort sort = Sort.by(direction, eventSearchDto.getSortBy());
@@ -87,7 +101,10 @@ public class EventServiceImpl implements EventService {
 
         Page<Event> resultPage = eventRepository.findAll(spec, pageable);
 
-        return resultPage.getContent().stream().map(this::entityToDto).toList();
+        List<EventDto> eventDtos = resultPage.getContent().stream().map(this::entityToDto).toList();
+        long totalRecords = resultPage.getTotalElements();
+
+        return new SearchResultDto<>(eventDtos, totalRecords);
     }
 
     private Event dtoToEntity(EventDto eventDto) {

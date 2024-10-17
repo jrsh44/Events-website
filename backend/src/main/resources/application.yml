@@ -13,9 +13,6 @@ spring:
           starttls:
             enable: true
             required: true
-  jackson:
-    date-format: dd-MM-yyyy
-    time-zone: Europe/Warsaw
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: root

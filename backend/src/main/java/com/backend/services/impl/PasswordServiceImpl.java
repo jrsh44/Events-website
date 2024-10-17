@@ -2,7 +2,7 @@ package com.backend.services.impl;
 
 import com.backend.data.PasswordResetToken;
 import com.backend.data.User;
-import com.backend.exceptions.TokenException;
+import com.backend.exceptions.UserTokenException;
 import com.backend.exceptions.UnknownUserException;
 import com.backend.model.PasswordUpdateDto;
 import com.backend.model.RestartCredentialsDto;
@@ -57,7 +57,7 @@ public class PasswordServiceImpl implements PasswordService {
 
             passwordResetTokenRepository.delete(resetTokenOptional.get());
         } else {
-            throw new TokenException();
+            throw new UserTokenException();
         }
     }
 }
