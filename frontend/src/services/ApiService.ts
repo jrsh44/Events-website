@@ -55,31 +55,32 @@ export class ApiService {
 
       const responseClone = response.clone();
 
-      const data = await response.json();
-
       if (!response.ok) {
-        if (data.errorCode === "ES-02") {
-          if (localStorage.getItem("token")) {
-            localStorage.removeItem("token");
-            return this.request(request);
-          } else {
+        if (response.headers.get("Content-Type")?.startsWith("application/json")) {
+          const data = await response.json();
+          if (data.errorCode === "ES-02") {
+            if (localStorage.getItem("token")) {
+              localStorage.removeItem("token");
+              return this.request(request);
+            } else {
+              store.dispatch(
+                appActions.setToast({
+                  title: "Brak autoryzacji",
+                  description: "Twój token wygasł, zaloguj się ponownie",
+                  variant: "destructive",
+                }),
+              );
+              window.location.href = "/login";
+            }
+          } else if (data.errorCode && data.errorMessage)
             store.dispatch(
               appActions.setToast({
-                title: "Brak autoryzacji",
-                description: "Twój token wygasł, zaloguj się ponownie",
+                title: data.errorCode,
+                description: data.errorMessage,
                 variant: "destructive",
               }),
             );
-            window.location.href = "/login";
-          }
-        } else if (data.errorCode && data.errorMessage)
-          store.dispatch(
-            appActions.setToast({
-              title: data.errorCode,
-              description: data.errorMessage,
-              variant: "destructive",
-            }),
-          );
+        }
       }
 
       return responseClone;

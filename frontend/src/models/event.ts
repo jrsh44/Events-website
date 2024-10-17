@@ -5,6 +5,13 @@ export enum EEventType {
   Other = "OTHER",
 }
 
+export interface IEventValidate {
+  title: string;
+  description: string;
+  date: string;
+  type: string;
+}
+
 export interface IEventFilter {
   page: number;
   take: number;
@@ -17,10 +24,10 @@ export interface IEventFilter {
 }
 
 export interface IEvent {
-  id: number;
+  id?: number;
   title: string;
   description: string;
-  date: string;
+  date?: string;
   type: EEventType;
 }
 

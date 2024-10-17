@@ -11,6 +11,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/providers/store";
 import { EUserRole } from "@/models/user";
 import { appActions } from "@/slices/appSlice";
+import { roleAuth } from "@/models/auth";
 
 export const NavSidebar = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
@@ -26,25 +27,25 @@ export const NavSidebar = () => {
       titleTrKey: "nav.home",
       to: EPath.Home,
       Icon: <HomeIcon />,
-      authorities: [EUserRole.None, EUserRole.User, EUserRole.Manager, EUserRole.Admin],
+      authorities: roleAuth.archivedRead,
     },
     {
       titleTrKey: "nav.events",
       to: EPath.Events,
       Icon: <TicketsIcon />,
-      authorities: [EUserRole.User, EUserRole.Manager, EUserRole.Admin],
+      authorities: roleAuth.eventRead,
     },
     {
       titleTrKey: "nav.profile",
       to: EPath.Profile,
       Icon: <UserIcon />,
-      authorities: [EUserRole.User, EUserRole.Manager, EUserRole.Admin],
+      authorities: roleAuth.eventRead,
     },
     {
       titleTrKey: "nav.users",
       to: EPath.Users,
       Icon: <UsersIcon />,
-      authorities: [EUserRole.Manager, EUserRole.Admin],
+      authorities: roleAuth.userModify,
     },
   ];
 

@@ -1,6 +1,6 @@
 import { DatePickerWithRange } from "@/components/DatePickerWithRange";
 import { TableData } from "@/components/TableData";
-import { TypoBody, TypoH1, TypoValidation } from "@/components/Typo";
+import { TypoBody, TypoH1 } from "@/components/Typo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,25 +12,23 @@ import {
 } from "@/components/ui/select";
 import { formatDate } from "@/lib/utils";
 import { EEventType, IEvent, IEventFilter, IFilteredEvents } from "@/models/event";
-import { EUserRole } from "@/models/user";
-import { useAppSelector } from "@/providers/store";
+import { useAppDispatch, useAppSelector } from "@/providers/store";
 import { Services } from "@/services/Services";
 import { ColumnDef } from "@tanstack/react-table";
-import { FilterXIcon, PencilLineIcon } from "lucide-react";
+import {
+  CalendarPlusIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  FilterXIcon,
+  PencilLineIcon,
+} from "lucide-react";
 import { useEffect, useState, FormEvent } from "react";
 import { PageNotFound } from "../NotFound/PageNotFound";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@radix-ui/react-label";
-import { DatePicker } from "@/components/DatePicker";
-import { Textarea } from "@/components/ui/textarea";
+import { DialogTrigger } from "@/components/ui/dialog";
 import { t } from "@/providers/intl";
+import { EventDialog } from "./EventDialog";
+import { roleAuth } from "@/models/auth";
+import { appActions } from "@/slices/appSlice";
 
 const initialFilters: IEventFilter = {
   page: 0,
@@ -52,40 +50,96 @@ export const PageEvents = () => {
   const [filtersKey, setFiltersKey] = useState(0);
   const [modifiedEvent, setModifiedEvent] = useState<IEvent | null>(null);
   const [errors, setErrors] = useState(initialErrors);
+  const dispatch = useAppDispatch();
+
+  const { role } = useAppSelector((state) => state.app.user);
+  const isEventRead = roleAuth.eventRead.includes(role);
+  const isEventModify = roleAuth.eventModify.includes(role);
+
+  const handleSort = (column: keyof IEvent) => {
+    const newSortDirection =
+      filters.sortBy === column && filters.sortDirection === "asc" ? "desc" : "asc";
+    handleEventsFetch({ ...filters, sortBy: column, sortDirection: newSortDirection });
+  };
+
+  const renderSortIcon = (column: keyof IEvent) => {
+    if (filters.sortBy !== column) return null;
+    return filters.sortDirection === "asc" ? (
+      <ChevronUpIcon className="inline-block ml-2" />
+    ) : (
+      <ChevronDownIcon className="inline-block ml-2" />
+    );
+  };
 
   const columns: ColumnDef<IEvent>[] = [
-    { accessorKey: "id", header: "ID" },
-    { accessorKey: "title", header: t("events.titleLabel") },
-    { accessorKey: "description", header: t("events.descriptionLabel") },
-    { accessorKey: "date", header: t("events.dateLabel") },
-    { accessorKey: "type", header: t("events.typeLabel") },
     {
-      accessorKey: "edit",
-      header: () => <div className="text-right">{t("events.actions")}</div>,
-      cell: ({ row }) => (
-        <div className="flex justify-end">
-          <DialogTrigger asChild>
-            <Button
-              variant="outline"
-              className="p-2"
-              onClick={() => {
-                setModifiedEvent(row.original);
-                setErrors(initialErrors);
-              }}
-            >
-              <PencilLineIcon />
-            </Button>
-          </DialogTrigger>
+      accessorKey: "id",
+      header: () => (
+        <div onClick={() => handleSort("id")} className="flex items-center cursor-pointer">
+          ID {renderSortIcon("id")}
         </div>
       ),
     },
+    {
+      accessorKey: "title",
+      header: () => (
+        <div onClick={() => handleSort("title")} className="flex items-center cursor-pointer">
+          {t("events.titleLabel")} {renderSortIcon("title")}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "description",
+      header: () => (
+        <div onClick={() => handleSort("description")} className="flex items-center cursor-pointer">
+          {t("events.descriptionLabel")} {renderSortIcon("description")}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "date",
+      header: () => (
+        <div onClick={() => handleSort("date")} className="flex items-center cursor-pointer">
+          {t("events.dateLabel")} {renderSortIcon("date")}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "type",
+      header: () => (
+        <div onClick={() => handleSort("type")} className="flex items-center cursor-pointer">
+          {t("events.typeLabel")} {renderSortIcon("type")}
+        </div>
+      ),
+    },
+    ...(isEventModify
+      ? [
+          {
+            accessorKey: "edit",
+            header: () => <div className="text-right">{t("events.actions")}</div>,
+            cell: ({ row }: { row: { original: IEvent } }) => (
+              <div className="flex justify-end">
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="p-2"
+                    onClick={() => {
+                      setModifiedEvent(row.original);
+                      setErrors(initialErrors);
+                    }}
+                  >
+                    <PencilLineIcon />
+                  </Button>
+                </DialogTrigger>
+              </div>
+            ),
+          },
+        ]
+      : []),
   ];
 
-  const { role } = useAppSelector((state) => state.app.user);
-  const isUserAuthenticated = role !== EUserRole.None;
-
   const handleEventsFetch = async (newFilters: IEventFilter) => {
-    if (!isUserAuthenticated) return;
+    if (!isEventRead) return;
     setFilters(newFilters);
     const response = await Services.App.searchEvents(newFilters);
     if (response) {
@@ -123,27 +177,74 @@ export const PageEvents = () => {
     return Object.values(newErrors).every((error) => error === "");
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleUpdate = async (e: FormEvent) => {
     e.preventDefault();
-    if (validateEvent()) {
-      // Save event data logic here
-      // Example:
-      // const response = await Services.App.updateEvent(modifiedEvent);
-      // if (response.ok) {
-      //   handleEventsFetch(filters);
-      //   setModifiedEvent(null);
-      // }
+    if (validateEvent() && modifiedEvent) {
+      const response = await Services.App.updateEvent(
+        (modifiedEvent?.id ?? -1).toString(),
+        modifiedEvent,
+      );
+      if (response) {
+        if (response.ok) {
+          handleEventsFetch(filters);
+          dispatch(
+            appActions.setToast({
+              title: "Sukces",
+              description: "Pomyślnie zaktualizowano wydarzenie",
+            }),
+          );
+        }
+      }
     }
   };
 
-  return isUserAuthenticated ? (
+  const handleAddEvent = async (e: FormEvent) => {
+    e.preventDefault();
+    if (validateEvent() && modifiedEvent) {
+      const response = await Services.App.createEvent(modifiedEvent);
+
+      if (response) {
+        if (response.ok) {
+          handleEventsFetch(filters);
+          setModifiedEvent(null);
+          dispatch(
+            appActions.setToast({
+              title: "Sukces",
+              description: "Pomyślnie dodano wydarzenie",
+            }),
+          );
+        }
+      }
+    }
+  };
+
+  const handleDeleteEvent = async (id: number) => {
+    const response = await Services.App.deleteEvent(id.toString());
+
+    if (response) {
+      if (response.ok) {
+        handleEventsFetch(filters);
+        dispatch(
+          appActions.setToast({
+            title: "Sukces",
+            description: "Pomyślnie usunięto wydarzenie",
+          }),
+        );
+      }
+    }
+  };
+
+  return isEventRead ? (
     <div className="flex flex-col p-10 gap-8">
       <div className="flex flex-col gap-4">
         <TypoH1>{t("events.title")}</TypoH1>
         <TypoBody className="text-neutral-500">{t("events.description")}</TypoBody>
       </div>
       <div className="flex flex-col gap-6">
-        <div className="flex gap-4" key={filtersKey}>
+        <div
+          className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 flex-col md:flex-row"
+          key={filtersKey}
+        >
           <Input
             name="title"
             placeholder={t("home.filterByTitle")}
@@ -181,11 +282,43 @@ export const PageEvents = () => {
               })
             }
           />
-          <Button onClick={handleResetFilters} variant="destructive" className="p-2">
-            <FilterXIcon />
-          </Button>
+          <div className="flex gap-4 justify-self-end">
+            {isEventModify && (
+              <EventDialog
+                event={modifiedEvent}
+                setEvent={setModifiedEvent}
+                error={errors}
+                handleSubmit={handleAddEvent}
+                type="edit"
+              >
+                <DialogTrigger asChild>
+                  <Button
+                    variant="secondary"
+                    className="p-2"
+                    onClick={() => setModifiedEvent(null)}
+                  >
+                    <CalendarPlusIcon />
+                  </Button>
+                </DialogTrigger>
+              </EventDialog>
+            )}
+            <Button
+              onClick={handleResetFilters}
+              variant="destructive"
+              className="p-2 justify-self-end w-10"
+            >
+              <FilterXIcon />
+            </Button>
+          </div>
         </div>
-        <Dialog>
+        <EventDialog
+          event={modifiedEvent}
+          setEvent={setModifiedEvent}
+          error={errors}
+          handleSubmit={handleUpdate}
+          handleDelete={handleDeleteEvent}
+          type="edit"
+        >
           <TableData
             columns={columns}
             data={filteredEvents.records}
@@ -195,86 +328,7 @@ export const PageEvents = () => {
               setPage: (page) => handleEventsFetch({ ...filters, page }),
             }}
           />
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>{t("events.editEvent")}</DialogTitle>
-              <DialogDescription>{t("events.editEventDescription")}</DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleSubmit}>
-              <div className="grid w-full items-center gap-2">
-                <div className="flex flex-col gap-1">
-                  <Label htmlFor="title">{t("events.titleLabel")}</Label>
-                  <Input
-                    id="title"
-                    value={modifiedEvent?.title}
-                    className="col-span-3"
-                    onChange={(e) =>
-                      setModifiedEvent((prev) => (prev ? { ...prev, title: e.target.value } : null))
-                    }
-                  />
-                  <TypoValidation>{errors.title}</TypoValidation>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <Label htmlFor="date" className="text-left">
-                    {t("events.dateLabel")}
-                  </Label>
-                  <DatePicker
-                    date={modifiedEvent?.date ? new Date(modifiedEvent?.date) : undefined}
-                    setDate={(date) =>
-                      setModifiedEvent((prev) =>
-                        prev ? { ...prev, date: formatDate(date) || "" } : null,
-                      )
-                    }
-                  />
-                  <TypoValidation>{errors.date}</TypoValidation>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <Label htmlFor="type">{t("events.typeLabel")}</Label>
-                  <Select
-                    name="type"
-                    value={modifiedEvent?.type}
-                    onValueChange={(value) =>
-                      setModifiedEvent((prev) =>
-                        prev ? { ...prev, type: value as EEventType } : null,
-                      )
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder={t("home.filterByType")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={EEventType.Conference}>{t("home.conference")}</SelectItem>
-                      <SelectItem value={EEventType.Interview}>{t("home.interview")}</SelectItem>
-                      <SelectItem value={EEventType.Workshop}>{t("home.workshop")}</SelectItem>
-                      <SelectItem value={EEventType.Other}>{t("home.other")}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <TypoValidation>{errors.type}</TypoValidation>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <Label htmlFor="description">{t("events.descriptionLabel")}</Label>
-                  <Textarea
-                    id="description"
-                    value={modifiedEvent?.description}
-                    onChange={(e) =>
-                      setModifiedEvent((prev) =>
-                        prev ? { ...prev, description: e.target.value } : null,
-                      )
-                    }
-                    className="col-span-3"
-                  />
-                  <TypoValidation>{errors.description}</TypoValidation>
-                </div>
-              </div>
-              <div className="flex justify-between mt-8">
-                <Button type="button" variant="destructive">
-                  {t("events.delete")}
-                </Button>
-                <Button type="submit">{t("events.saveChanges")}</Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+        </EventDialog>
       </div>
     </div>
   ) : (

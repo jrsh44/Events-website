@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { t } from "@/providers/intl";
 
 interface IDatePickerWithRangeProps {
   dateRange: DateRange;
@@ -21,7 +22,7 @@ export const DatePickerWithRange = (props: IDatePickerWithRangeProps) => (
           id="date"
           variant={"outline"}
           className={cn(
-            "w-[300px] justify-start text-left font-normal",
+            "flex justify-start text-left font-normal",
             !props.dateRange && "text-muted-foreground",
           )}
         >
@@ -36,7 +37,7 @@ export const DatePickerWithRange = (props: IDatePickerWithRangeProps) => (
               format(props.dateRange.from, "LLL dd, y")
             )
           ) : (
-            <span>Pick a date</span>
+            <span>{t("datepicker.pick")}</span>
           )}
         </Button>
       </PopoverTrigger>

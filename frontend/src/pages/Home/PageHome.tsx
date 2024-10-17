@@ -11,16 +11,8 @@ import { t } from "@/providers/intl";
 import { Services } from "@/services/Services";
 import { SelectValue } from "@radix-ui/react-select";
 import { ColumnDef } from "@tanstack/react-table";
-import { FilterXIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon, FilterXIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-
-const columns: ColumnDef<IEvent>[] = [
-  { accessorKey: "id", header: "ID" },
-  { accessorKey: "title", header: "Title" },
-  { accessorKey: "description", header: "Description" },
-  { accessorKey: "date", header: "Date" },
-  { accessorKey: "type", header: "Type" },
-];
 
 const initialFilters: IEventFilter = {
   page: 0,
@@ -37,6 +29,64 @@ export const PageHome = () => {
   const [filters, setFilters] = useState<IEventFilter>(initialFilters);
   const [filteredEvents, setFilteredEvents] = useState<IFilteredEvents>({ records: [], total: 0 });
   const [filtersKey, setFiltersKey] = useState(0);
+
+  const handleSort = (column: keyof IEvent) => {
+    const newSortDirection =
+      filters.sortBy === column && filters.sortDirection === "asc" ? "desc" : "asc";
+    handleEventsFetch({ ...filters, sortBy: column, sortDirection: newSortDirection });
+  };
+
+  const renderSortIcon = (column: keyof IEvent) => {
+    if (filters.sortBy !== column) return null;
+    return filters.sortDirection === "asc" ? (
+      <ChevronUpIcon className="inline-block ml-2" />
+    ) : (
+      <ChevronDownIcon className="inline-block ml-2" />
+    );
+  };
+
+  const columns: ColumnDef<IEvent>[] = [
+    {
+      accessorKey: "id",
+      header: () => (
+        <div onClick={() => handleSort("id")} className="flex items-center cursor-pointer">
+          ID {renderSortIcon("id")}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "title",
+      header: () => (
+        <div onClick={() => handleSort("title")} className="flex items-center cursor-pointer">
+          {t("events.titleLabel")} {renderSortIcon("title")}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "description",
+      header: () => (
+        <div onClick={() => handleSort("description")} className="flex items-center cursor-pointer">
+          {t("events.descriptionLabel")} {renderSortIcon("description")}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "date",
+      header: () => (
+        <div onClick={() => handleSort("date")} className="flex items-center cursor-pointer">
+          {t("events.dateLabel")} {renderSortIcon("date")}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "type",
+      header: () => (
+        <div onClick={() => handleSort("type")} className="flex items-center cursor-pointer">
+          {t("events.typeLabel")} {renderSortIcon("type")}
+        </div>
+      ),
+    },
+  ];
 
   const handleEventsFetch = async (newFilters: IEventFilter) => {
     setFilters(newFilters);
@@ -67,7 +117,10 @@ export const PageHome = () => {
       <Separator />
       <div className="flex flex-col gap-6">
         <TypoH2>{t("home.archivedEvents")}</TypoH2>
-        <div className="flex gap-4" key={filtersKey}>
+        <div
+          className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 flex-col md:flex-row"
+          key={filtersKey}
+        >
           <Input
             name="title"
             placeholder={t("home.filterByTitle")}
@@ -105,7 +158,11 @@ export const PageHome = () => {
               })
             }
           />
-          <Button onClick={handleResetFilters} variant="destructive" className="p-2">
+          <Button
+            onClick={handleResetFilters}
+            variant="destructive"
+            className="p-2 justify-self-end w-10"
+          >
             <FilterXIcon />
           </Button>
         </div>

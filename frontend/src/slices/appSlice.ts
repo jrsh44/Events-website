@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IAppToastProps } from "@/components/ui/toast";
 import { EUserRole, IUser } from "@/models/user";
+import { EPath } from "@/providers/router";
 
 interface IAppSlice {
   loadingCount: number;
@@ -34,9 +35,9 @@ const appSlice = createSlice({
       state.user = action.payload;
     },
     logout: (state) => {
+      window.location.href = EPath.Home;
       state.user = initialUser;
       localStorage.removeItem("token");
-      window.location.reload();
     },
     setToast: (state, action: PayloadAction<IAppToastProps | undefined>) => {
       state.toast = action.payload;

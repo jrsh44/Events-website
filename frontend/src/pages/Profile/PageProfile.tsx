@@ -1,17 +1,16 @@
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { EUserRole } from "@/models/user";
 import { t } from "@/providers/intl";
 import { useAppSelector } from "@/providers/store";
 import { PageNotFound } from "../NotFound/PageNotFound";
+import { TypoH1 } from "@/components/Typo";
 
 export const PageProfile = () => {
   const { firstName, lastName, email, role } = useAppSelector((state) => state.app.user);
 
   return role !== EUserRole.None ? (
     <div className="p-10">
-      <h1 className="text-2xl font-bold mb-4">{t("profile.title")}</h1>
-      <Separator />
+      <TypoH1>{t("profile.title")}</TypoH1>
       <div className="mt-4">
         <div className="flex flex-col gap-4">
           <div>
