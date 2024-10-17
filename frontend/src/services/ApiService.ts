@@ -57,14 +57,16 @@ export class ApiService {
       if (!response.ok) {
         if (response.headers.get("Content-Type")?.startsWith("application/json")) {
           const data = await response.json();
-          if (data.errorCode && data.errorMessage)
+          if (data.code && data.message)
             store.dispatch(
               appActions.setToast({
-                title: data.errorCode,
-                description: data.errorMessage,
+                title: data.code,
+                description: data.message,
                 variant: "destructive",
               }),
             );
+        } else {
+          throw response;
         }
       }
 

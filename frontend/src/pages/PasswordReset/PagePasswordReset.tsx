@@ -27,17 +27,7 @@ export const PagePasswordReset = () => {
       const response = await Services.App.checkResetToken(token);
       if (response) {
         if (!response.ok) {
-          if (response.headers.get("content-type")?.includes("application/json")) {
-            const data = await response.json();
-            dispatch(
-              appActions.setToast({
-                title: data.errorCode,
-                description: data.errorMessage,
-                variant: "destructive",
-              }),
-            );
-            navigate(EPath.Login);
-          }
+          navigate(EPath.Login);
         }
       }
     };

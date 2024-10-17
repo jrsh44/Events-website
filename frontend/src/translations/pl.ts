@@ -136,4 +136,9 @@ export const pl = {
   // Validation
   "validation.required": "Pole jest wymagane",
   "validation.samePassword": "Hasła muszą być identyczne",
+
+  // Error Page
+  "error.title": "Błąd",
+  "error.description": "Wystąpił nieoczekiwany błąd skutkujący niepowodzeniem operacji.",
+  "error.goHome": "Wróć na stronę główną",
 };
