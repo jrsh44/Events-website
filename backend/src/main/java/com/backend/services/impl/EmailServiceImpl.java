@@ -13,7 +13,7 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender emailSender;
 
     public void sendResetPasswordEmail(String to, String token) {
-        String resetLink = "http://localhost:3000/password-reset?token=" + token;
+        String resetLink = "http://localhost:4173/password-reset?token=" + token;
         String subject = "Resetowanie hasła";
         String body = "Kliknij w poniższy link, aby zresetować hasło: \n" + resetLink;
 

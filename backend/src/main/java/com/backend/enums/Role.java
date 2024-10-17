@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Getter
 @RequiredArgsConstructor
 public enum Role {
     ADMIN(
@@ -31,7 +32,6 @@ public enum Role {
             )
     );
 
-    @Getter
     private final Set<Permission> permissions;
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
