@@ -33,7 +33,7 @@ export const PageHome = () => {
   const handleSort = (column: keyof IEvent) => {
     const newSortDirection =
       filters.sortBy === column && filters.sortDirection === "asc" ? "desc" : "asc";
-    handleEventsFetch({ ...filters, sortBy: column, sortDirection: newSortDirection });
+    handleEventsFetch({ ...filters, sortBy: column, sortDirection: newSortDirection, page: 0 });
   };
 
   const renderSortIcon = (column: keyof IEvent) => {

@@ -47,7 +47,7 @@ export const PageUsers = () => {
   const handleSort = (column: keyof IUserCredentials) => {
     const newSortDirection =
       filters.sortBy === column && filters.sortDirection === "asc" ? "desc" : "asc";
-    handleUsersFetch({ ...filters, sortBy: column, sortDirection: newSortDirection });
+    handleUsersFetch({ ...filters, sortBy: column, sortDirection: newSortDirection, page: 0 });
   };
 
   const renderSortIcon = (column: keyof IUserCredentials) => {
@@ -155,10 +155,10 @@ export const PageUsers = () => {
       password: "",
     };
 
-    if (!modifiedUser?.firstName) newErrors.firstName = t("users.errors.firstName");
-    if (!modifiedUser?.lastName) newErrors.lastName = t("users.errors.lastName");
-    if (!modifiedUser?.email) newErrors.email = t("users.errors.email");
-    if (!modifiedUser?.role) newErrors.role = t("users.errors.role");
+    if (!modifiedUser?.firstName) newErrors.firstName = t("validation.required");
+    if (!modifiedUser?.lastName) newErrors.lastName = t("validation.required");
+    if (!modifiedUser?.email) newErrors.email = t("validation.required");
+    if (!modifiedUser?.role) newErrors.role = t("validation.required");
 
     setErrors(newErrors);
 
@@ -174,11 +174,11 @@ export const PageUsers = () => {
       password: "",
     };
 
-    if (!modifiedUser?.firstName) newErrors.firstName = t("users.errors.firstName");
-    if (!modifiedUser?.lastName) newErrors.lastName = t("users.errors.lastName");
-    if (!modifiedUser?.email) newErrors.email = t("users.errors.email");
-    if (!modifiedUser?.role) newErrors.role = t("users.errors.role");
-    if (!modifiedUser?.password) newErrors.password = t("users.errors.password");
+    if (!modifiedUser?.firstName) newErrors.firstName = t("validation.required");
+    if (!modifiedUser?.lastName) newErrors.lastName = t("validation.required");
+    if (!modifiedUser?.email) newErrors.email = t("validation.required");
+    if (!modifiedUser?.role) newErrors.role = t("validation.required");
+    if (!modifiedUser?.password) newErrors.password = t("validation.required");
 
     setErrors(newErrors);
 

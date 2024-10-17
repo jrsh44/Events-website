@@ -42,6 +42,7 @@ export class ApiService {
             }),
           );
           window.location.href = "/login";
+          return undefined;
         }
       }
 
@@ -51,28 +52,12 @@ export class ApiService {
         headers,
       });
 
-      console.log(response);
-
       const responseClone = response.clone();
 
       if (!response.ok) {
         if (response.headers.get("Content-Type")?.startsWith("application/json")) {
           const data = await response.json();
-          if (data.errorCode === "ES-02") {
-            if (localStorage.getItem("token")) {
-              localStorage.removeItem("token");
-              return this.request(request);
-            } else {
-              store.dispatch(
-                appActions.setToast({
-                  title: "Brak autoryzacji",
-                  description: "Twój token wygasł, zaloguj się ponownie",
-                  variant: "destructive",
-                }),
-              );
-              window.location.href = "/login";
-            }
-          } else if (data.errorCode && data.errorMessage)
+          if (data.errorCode && data.errorMessage)
             store.dispatch(
               appActions.setToast({
                 title: data.errorCode,

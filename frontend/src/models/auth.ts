@@ -12,11 +12,11 @@ export interface IRegister {
   lastName: string;
 }
 
-export interface IForgotPassword {
+export interface IResetPasswordRequest {
   email: string;
 }
 
-export interface IResetPassword {
+export interface IForgotPassword {
   password: string;
 }
 

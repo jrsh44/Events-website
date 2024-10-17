@@ -38,12 +38,11 @@ export const PageRegister = () => {
       confirmPassword: "",
     };
 
-    if (!firstName) newErrors.firstName = t("register.errors.firstName");
-    if (!lastName) newErrors.lastName = t("register.errors.lastName");
-    if (!email) newErrors.email = t("register.errors.email");
-    if (!password) newErrors.password = t("register.errors.password");
-    if (password !== confirmPassword)
-      newErrors.confirmPassword = t("register.errors.confirmPassword");
+    if (!firstName) newErrors.firstName = t("validation.required");
+    if (!lastName) newErrors.lastName = t("validation.required");
+    if (!email) newErrors.email = t("validation.required");
+    if (!password) newErrors.password = t("validation.required");
+    if (password !== confirmPassword) newErrors.confirmPassword = t("validation.samePassword");
 
     setErrors(newErrors);
 

@@ -30,8 +30,8 @@ export const PageLogin = () => {
       password: "",
     };
 
-    if (!email) newErrors.email = t("login.errors.email");
-    if (!password) newErrors.password = t("login.errors.password");
+    if (!email) newErrors.email = t("validation.required");
+    if (!password) newErrors.password = t("validation.required");
 
     setErrors(newErrors);
 

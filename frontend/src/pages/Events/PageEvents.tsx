@@ -59,7 +59,7 @@ export const PageEvents = () => {
   const handleSort = (column: keyof IEvent) => {
     const newSortDirection =
       filters.sortBy === column && filters.sortDirection === "asc" ? "desc" : "asc";
-    handleEventsFetch({ ...filters, sortBy: column, sortDirection: newSortDirection });
+    handleEventsFetch({ ...filters, sortBy: column, sortDirection: newSortDirection, page: 0 });
   };
 
   const renderSortIcon = (column: keyof IEvent) => {
@@ -167,10 +167,10 @@ export const PageEvents = () => {
       description: "",
     };
 
-    if (!modifiedEvent?.title) newErrors.title = t("events.errors.title");
-    if (!modifiedEvent?.date) newErrors.date = t("events.errors.date");
-    if (!modifiedEvent?.type) newErrors.type = t("events.errors.type");
-    if (!modifiedEvent?.description) newErrors.description = t("events.errors.description");
+    if (!modifiedEvent?.title) newErrors.title = t("validation.required");
+    if (!modifiedEvent?.date) newErrors.date = t("validation.required");
+    if (!modifiedEvent?.type) newErrors.type = t("validation.required");
+    if (!modifiedEvent?.description) newErrors.description = t("validation.required");
 
     setErrors(newErrors);
 

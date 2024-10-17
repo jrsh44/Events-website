@@ -7,8 +7,6 @@ export const pl = {
   "login.forgotPassword": "Zapomniałeś hasła?",
   "login.noAccount": "Nie masz konta?",
   "login.register": "Zarejestruj się",
-  "login.errors.email": "Email jest wymagany",
-  "login.errors.password": "Hasło jest wymagane",
 
   // Register
   "register.title": "Rejestracja",
@@ -20,11 +18,6 @@ export const pl = {
   "register.submit": "Zarejestruj się",
   "register.alreadyHaveAccount": "Masz już konto?",
   "register.login": "Zaloguj się",
-  "register.errors.firstName": "Imię jest wymagane",
-  "register.errors.lastName": "Nazwisko jest wymagane",
-  "register.errors.email": "Email jest wymagany",
-  "register.errors.password": "Hasło jest wymagane",
-  "register.errors.confirmPassword": "Hasła muszą być identyczne",
 
   // PasswordForgot
   "passwordForgot.title": "Przywrócenie hasła",
@@ -89,10 +82,6 @@ export const pl = {
   "events.typeLabel": "Typ",
   "events.descriptionLabel": "Opis",
   "events.actions": "Akcje",
-  "events.errors.title": "Tytuł jest wymagany",
-  "events.errors.date": "Data jest wymagana",
-  "events.errors.type": "Typ jest wymagany",
-  "events.errors.description": "Opis jest wymagany",
 
   // Event Dialog
   "event.dialog.addEvent": "Dodaj wydarzenie",
@@ -126,10 +115,6 @@ export const pl = {
   "users.filterByEmail": "Filtruj według emaila",
   "users.admin": "Administrator",
   "users.user": "Użytkownik",
-  "users.errors.firstName": "Imię jest wymagane",
-  "users.errors.lastName": "Nazwisko jest wymagane",
-  "users.errors.email": "Email jest wymagany",
-  "users.errors.password": "Hasło jest wymagane",
 
   "user.dialog.addUser": "Dodaj użytkownika",
   "user.dialog.addUserDescription": "Wprowadź dane nowego użytkownika.",
@@ -147,4 +132,8 @@ export const pl = {
   "user.dialog.user": "Użytkownik",
   "user.dialog.delete": "Usuń",
   "user.dialog.password": "Hasło",
+
+  // Validation
+  "validation.required": "Pole jest wymagane",
+  "validation.samePassword": "Hasła muszą być identyczne",
 };
