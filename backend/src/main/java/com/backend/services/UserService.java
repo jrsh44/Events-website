@@ -10,6 +10,8 @@ public interface UserService {
 
     void deleteUser(Integer userId);
 
+    UserDto getCurrentUser();
+
     UserDto addUser(UserCreateDto userCreateDto);
 
     UserDto updateUser(Integer userId, UserDto userDto);

@@ -56,12 +56,14 @@ public class UserAuthenticationProvider {
 
         DecodedJWT decoded = verifier.verify(token);
 
-        UserDto user = userService.findByEmail(decoded.getSubject());
+        String email = decoded.getSubject();
+
+        UserDto user = userService.findByEmail(email);
 
         Role userRole = user.getRole();
         Collection<? extends GrantedAuthority> authorities = userRole.getAuthorities();
 
-        return new UsernamePasswordAuthenticationToken(user, null, authorities);
+        return new UsernamePasswordAuthenticationToken(email, null, authorities);
     }
 
 }

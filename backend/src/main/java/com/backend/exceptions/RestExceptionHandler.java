@@ -36,8 +36,8 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(UserTokenException.class)
-    public ResponseEntity<ErrorResponse> handleUserTokenException() {
-        ErrorResponse errorResponse = new ErrorResponse("ES-02", "Token jest niepoprawny lub wygasł");
+    public ResponseEntity<ErrorResponse> handleUserTokenException(UserTokenException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("ES-02", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
@@ -63,6 +63,12 @@ public class RestExceptionHandler {
     public ResponseEntity<ErrorResponse> handleUnknownEventException() {
         ErrorResponse errorResponse = new ErrorResponse("ES-06", "Nie odnaleziono takiego wydarzenia");
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResetTokenException.class)
+    public ResponseEntity<ErrorResponse> handleResetTokenException() {
+        ErrorResponse errorResponse = new ErrorResponse("ES-07", "Token jest błędny lub stracił ważność");
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
 

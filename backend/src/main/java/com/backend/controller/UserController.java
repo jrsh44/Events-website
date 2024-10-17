@@ -22,6 +22,12 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping
+    public ResponseEntity<UserDto> getCurrentUser() {
+        UserDto user = userService.getCurrentUser();
+        return ResponseEntity.ok(user);
+    }
+
     @PreAuthorize("hasAuthority('user:modify')")
     @PostMapping
     public ResponseEntity<UserDto> addUser(@RequestBody @Valid UserCreateDto userDto) {

@@ -57,7 +57,7 @@ public class PasswordServiceImpl implements PasswordService {
 
             passwordResetTokenRepository.delete(resetTokenOptional.get());
         } else {
-            throw new UserTokenException();
+            throw new UserTokenException("Token jest niepoprawny lub wygasł");
         }
     }
 }

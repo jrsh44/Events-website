@@ -6,6 +6,7 @@ import com.backend.enums.Role;
 import com.backend.exceptions.LoginException;
 import com.backend.exceptions.EmailTakenException;
 import com.backend.exceptions.UnknownUserException;
+import com.backend.exceptions.UserTokenException;
 import com.backend.model.*;
 import com.backend.repositories.UserRepository;
 import com.backend.repositories.UserSpecification;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +62,16 @@ public class UserServiceImpl implements UserService {
         UserDto savedUserDto = entityToDto(savedUser);
 
         return savedUserDto;
+    }
+
+    @Override
+    public UserDto getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserTokenException("Token jest niepoprawny lub wygasł"));
+
+        return entityToDto(user);
     }
 
     @Override
