@@ -53,14 +53,23 @@ export const PageRegister = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      const data = await Services.App.postRegister({ firstName, lastName, email, password });
+      const response = await Services.App.register({ firstName, lastName, email, password });
 
-      if (data) {
-        if (!data.errorCode) {
+      if (response) {
+        const data = await response.json();
+        if (response.ok) {
           localStorage.setItem("token", data.token);
           navigate(EPath.Home);
           dispatch(
             appActions.setToast({ title: "Sukces", description: "Pomyślnie zarejestrowano" }),
+          );
+          dispatch(
+            appActions.setUser({
+              firstName: data.firstName,
+              role: data.role,
+              email: data.email,
+              lastName: data.lastName,
+            }),
           );
         } else {
           setErrors({

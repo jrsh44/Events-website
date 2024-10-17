@@ -41,12 +41,23 @@ export const PageLogin = () => {
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      const data = await Services.App.postLogin({ email, password });
+      const response = await Services.App.login({ email, password });
 
-      if (!data.errorCode) {
-        localStorage.setItem("token", data.token);
-        navigate(EPath.Home);
-        dispatch(appActions.setToast({ title: "Sukces", description: "Pomyślnie zalogowano" }));
+      if (response) {
+        const data = await response.json();
+        if (response.ok) {
+          localStorage.setItem("token", data.token);
+          navigate(EPath.Home);
+          dispatch(appActions.setToast({ title: "Sukces", description: "Pomyślnie zalogowano" }));
+          dispatch(
+            appActions.setUser({
+              firstName: data.firstName,
+              role: data.role,
+              email: data.email,
+              lastName: data.lastName,
+            }),
+          );
+        }
       }
     }
   };

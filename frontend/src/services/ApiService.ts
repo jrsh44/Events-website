@@ -5,21 +5,23 @@ interface IRequest {
   url: string;
   method: "GET" | "POST" | "PUT" | "DELETE";
   body?: BodyInit;
+  noAuth?: boolean;
 }
 
 const apiUrl = `${import.meta.env.VITE_APP_BE_URL}`;
 
 export class ApiService {
-  protected get = async (url: string) => this.request({ url, method: "GET" });
+  protected get = async (url: string, body?: BodyInit, noAuth?: boolean) =>
+    this.request({ url, method: "GET", body, noAuth: noAuth });
 
-  protected post = async (url: string, body: BodyInit) =>
-    this.request({ url, method: "POST", body });
+  protected post = async (url: string, body: BodyInit, noAuth?: boolean) =>
+    this.request({ url, method: "POST", body, noAuth: noAuth });
 
   protected put = async (url: string, body: BodyInit) => this.request({ url, method: "PUT", body });
 
   protected delete = async (url: string) => this.request({ url, method: "DELETE" });
 
-  private request = async (request: IRequest) => {
+  private request = async (request: IRequest): Promise<Response | undefined> => {
     store.dispatch(appActions.incrementLoadingCount());
 
     try {
@@ -27,9 +29,20 @@ export class ApiService {
         "Content-Type": "application/json",
       });
 
-      const token = localStorage.getItem("token");
-      if (token) {
-        headers.append("Authorization", `Bearer ${token}`);
+      if (!request.noAuth) {
+        const token = localStorage.getItem("token");
+        if (token) {
+          headers.append("Authorization", `Bearer ${token}`);
+        } else {
+          store.dispatch(
+            appActions.setToast({
+              title: "Brak autoryzacji",
+              description: "Zaloguj się, aby kontynuować",
+              variant: "destructive",
+            }),
+          );
+          window.location.href = "/login";
+        }
       }
 
       const response = await fetch(`${apiUrl}${request.url}`, {
@@ -38,10 +51,28 @@ export class ApiService {
         headers,
       });
 
+      console.log(response);
+
+      const responseClone = response.clone();
+
       const data = await response.json();
 
       if (!response.ok) {
-        if (data.errorCode && data.errorMessage)
+        if (data.errorCode === "ES-02") {
+          if (localStorage.getItem("token")) {
+            localStorage.removeItem("token");
+            return this.request(request);
+          } else {
+            store.dispatch(
+              appActions.setToast({
+                title: "Brak autoryzacji",
+                description: "Twój token wygasł, zaloguj się ponownie",
+                variant: "destructive",
+              }),
+            );
+            window.location.href = "/login";
+          }
+        } else if (data.errorCode && data.errorMessage)
           store.dispatch(
             appActions.setToast({
               title: data.errorCode,
@@ -51,7 +82,7 @@ export class ApiService {
           );
       }
 
-      return data;
+      return responseClone;
     } catch (error) {
       const responseError = error as Response;
       let parsedError = null;

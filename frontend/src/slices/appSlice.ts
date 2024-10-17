@@ -1,40 +1,23 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IEventDto, IUserDto } from "../models/dto";
-import { ToastActionElement, ToastProps } from "@/components/ui/toast";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { IAppToastProps } from "@/components/ui/toast";
+import { EUserRole, IUser } from "@/models/user";
 
 interface IAppSlice {
   loadingCount: number;
-  user: IUserDto;
-  events: IEventDto[];
-  eventsArchived: IEventDto[];
-  users: IUserDto[];
-  toast?: {
-    title?: string;
-    description: string;
-    variant?: ToastProps["variant"];
-    action?: ToastActionElement;
-  };
+  user: IUser;
+  toast?: IAppToastProps;
 }
+
+const initialUser: IUser = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  role: EUserRole.None,
+};
 
 const initialState: IAppSlice = {
   loadingCount: 0,
-  user: {
-    firstName: "",
-    lastName: "",
-    email: "",
-  },
-  events: [],
-  eventsArchived: [],
-  users: [],
-};
-
-const appThunks = {
-  getEvents: createAsyncThunk("app/getEvents", async (_, thunkApi) => {
-    // const response = await Services.App.getEvents();
-    // if (!response.ok) throw new Error("Fetch failed");
-    // return await response.json();
-    thunkApi.dispatch(appSlice.actions.setEvents([]));
-  }),
+  user: initialUser,
 };
 
 const appSlice = createSlice({
@@ -47,23 +30,19 @@ const appSlice = createSlice({
     decrementLoadingCount: (state) => {
       state.loadingCount -= 1;
     },
-    setUser: (state, action: PayloadAction<IUserDto>) => {
+    setUser: (state, action: PayloadAction<IUser>) => {
       state.user = action.payload;
     },
-    setEvents: (state, action: PayloadAction<IEventDto[]>) => {
-      state.events = action.payload;
+    logout: (state) => {
+      state.user = initialUser;
+      localStorage.removeItem("token");
+      window.location.reload();
     },
-    setEventsArchived: (state, action: PayloadAction<IEventDto[]>) => {
-      state.eventsArchived = action.payload;
-    },
-    setUsers: (state, action: PayloadAction<IUserDto[]>) => {
-      state.users = action.payload;
-    },
-    setToast: (state, action: PayloadAction<IAppSlice["toast"]>) => {
+    setToast: (state, action: PayloadAction<IAppToastProps | undefined>) => {
       state.toast = action.payload;
     },
   },
 });
 
 export const appReducer = appSlice.reducer;
-export const appActions = { ...appSlice.actions, ...appThunks };
+export const appActions = { ...appSlice.actions };
