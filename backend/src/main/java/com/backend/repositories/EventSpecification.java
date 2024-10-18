@@ -41,12 +41,12 @@ public class EventSpecification {
         };
     }
 
-    public static Specification<Event> isArchived(Boolean isArchived) {
-        return (root, query, criteriaBuilder) -> {
-            if (isArchived == null) {
-                return null;
-            }
-            return criteriaBuilder.equal(root.get("isArchived"), isArchived);
-        };
+    public static Specification<Event> hasDateGreaterThanOrEqual(LocalDate date) {
+        return (root, query, builder) -> builder.greaterThanOrEqualTo(root.get("date"), date);
     }
+
+    public static Specification<Event> hasDateLessThan(LocalDate date) {
+        return (root, query, builder) -> builder.lessThan(root.get("date"), date);
+    }
+
 }

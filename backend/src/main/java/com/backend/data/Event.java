@@ -38,7 +38,4 @@ public class Event {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EventType type;
-
-    @Column(nullable = false)
-    private Boolean isArchived;
 }

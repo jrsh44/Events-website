@@ -38,7 +38,6 @@ class EventControllerTest {
                 .description("This is a test event.")
                 .date(LocalDate.of(2004, 2, 25))
                 .type(EventType.OTHER)
-                .isArchived(false)
                 .build();
 
         eventCreateDto = new EventCreateDto("Test Event", "This is a test event.", LocalDate.of(2004, 2, 25), EventType.OTHER);
