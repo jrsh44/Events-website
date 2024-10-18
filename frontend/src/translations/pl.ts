@@ -113,8 +113,10 @@ export const pl = {
   "users.filterByFirstName": "Filtruj według imienia",
   "users.filterByLastName": "Filtruj według nazwiska",
   "users.filterByEmail": "Filtruj według emaila",
-  "users.admin": "Administrator",
-  "users.user": "Użytkownik",
+  "user.filter.role.placeholder": "Filtruj według roli",
+  "user.filter.role.user": "Użytkownik",
+  "user.filter.role.manager": "Manager",
+  "user.filter.role.admin": "Administrator",
 
   "user.dialog.addUser": "Dodaj użytkownika",
   "user.dialog.addUserDescription": "Wprowadź dane nowego użytkownika.",

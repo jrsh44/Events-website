@@ -290,7 +290,7 @@ export const PageEvents = () => {
                 setEvent={setModifiedEvent}
                 error={errors}
                 handleSubmit={handleAddEvent}
-                type="edit"
+                type="add"
               >
                 <DialogTrigger asChild>
                   <Button

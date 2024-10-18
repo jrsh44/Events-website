@@ -51,7 +51,7 @@ export const PageLogin = () => {
           dispatch(
             appActions.setToast({
               title: t("toast.title.success"),
-              description: t("toast.description.login"),
+              description: t("toast.description.login.success"),
             }),
           );
           dispatch(
