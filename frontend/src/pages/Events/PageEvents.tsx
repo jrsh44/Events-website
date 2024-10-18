@@ -189,8 +189,8 @@ export const PageEvents = () => {
           handleEventsFetch(filters);
           dispatch(
             appActions.setToast({
-              title: "Sukces",
-              description: "Pomyślnie zaktualizowano wydarzenie",
+              title: t("toast.title.success"),
+              description: t("toast.description.event.update"),
             }),
           );
         }
@@ -209,8 +209,8 @@ export const PageEvents = () => {
           setModifiedEvent(null);
           dispatch(
             appActions.setToast({
-              title: "Sukces",
-              description: "Pomyślnie dodano wydarzenie",
+              title: t("toast.title.success"),
+              description: t("toast.description.event.update"),
             }),
           );
         }
@@ -226,8 +226,8 @@ export const PageEvents = () => {
         handleEventsFetch(filters);
         dispatch(
           appActions.setToast({
-            title: "Sukces",
-            description: "Pomyślnie usunięto wydarzenie",
+            title: t("toast.title.success"),
+            description: t("toast.description.event.delete"),
           }),
         );
       }
@@ -295,7 +295,10 @@ export const PageEvents = () => {
                   <Button
                     variant="secondary"
                     className="p-2"
-                    onClick={() => setModifiedEvent(null)}
+                    onClick={() => {
+                      setModifiedEvent(null);
+                      setErrors(initialErrors);
+                    }}
                   >
                     <CalendarPlusIcon />
                   </Button>

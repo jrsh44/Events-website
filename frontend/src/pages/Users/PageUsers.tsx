@@ -197,8 +197,8 @@ export const PageUsers = () => {
           handleUsersFetch(filters);
           dispatch(
             appActions.setToast({
-              title: "Sukces",
-              description: "Pomyślnie zaktualizowano wydarzenie",
+              title: t("toast.title.success"),
+              description: t("Pomyślnie zaktualizowano użytkownika"),
             }),
           );
         } else {
@@ -226,8 +226,8 @@ export const PageUsers = () => {
           setModifiedUser(null);
           dispatch(
             appActions.setToast({
-              title: "Sukces",
-              description: "Pomyślnie dodano użytkownika",
+              title: t("toast.title.success"),
+              description: t("toast.description.user.add"),
             }),
           );
         } else {
@@ -252,8 +252,8 @@ export const PageUsers = () => {
         handleUsersFetch(filters);
         dispatch(
           appActions.setToast({
-            title: "Sukces",
-            description: "Pomyślnie usunięto użytkownika",
+            title: t("toast.title.success"),
+            description: t("toast.description.user.delete"),
           }),
         );
       }

@@ -48,7 +48,12 @@ export const PageLogin = () => {
         if (response.ok) {
           localStorage.setItem("token", data.token);
           navigate(EPath.Home);
-          dispatch(appActions.setToast({ title: "Sukces", description: "Pomyślnie zalogowano" }));
+          dispatch(
+            appActions.setToast({
+              title: t("toast.title.success"),
+              description: t("toast.description.login"),
+            }),
+          );
           dispatch(
             appActions.setUser({
               firstName: data.firstName,

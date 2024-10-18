@@ -141,4 +141,25 @@ export const pl = {
   "error.title": "Błąd",
   "error.description": "Wystąpił nieoczekiwany błąd skutkujący niepowodzeniem operacji.",
   "error.goHome": "Wróć na stronę główną",
+
+  // Toasts
+  "toast.title.success": "Sukces",
+  "toast.title.noAuth": "Brak autoryzacji",
+
+  "toast.description.login.success": "Pomyślnie zalogowano",
+
+  "toast.description.register.success": "Pomyślnie zarejestrowano",
+
+  "toast.description.passwordForgot.request": "Link do zresetowania hasła został wysłany na email",
+  "toast.description.passwordForgot.update": "Hasło zostało zaktualizowane",
+
+  "toast.description.event.add": "Pomyślnie dodano wydarzenie",
+  "toast.description.event.update": "Pomyślnie zaktualizowano wydarzenie",
+  "toast.description.event.delete": "Pomyślnie usunięto wydarzenie",
+
+  "toast.description.user.add": "Pomyślnie dodano użytkownika",
+  "toast.description.user.update": "Pomyślnie zaktualizowano użytkownika",
+  "toast.description.user.delete": "Pomyślnie usunięto użytkownika",
+
+  "toast.description.auth.login": "Zaloguj się, aby uzyskać dostęp",
 };

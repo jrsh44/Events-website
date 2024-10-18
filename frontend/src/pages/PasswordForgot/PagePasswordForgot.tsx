@@ -35,7 +35,7 @@ export const PagePasswordForgot = () => {
         if (response.ok) {
           dispatch(
             appActions.setToast({
-              description: "Na podany adres email został wysłany link umożliwiający reset hasła",
+              description: t("toast.description.passwordForgot.request"),
             }),
           );
           navigate(EPath.Login);

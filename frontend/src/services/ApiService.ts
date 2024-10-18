@@ -1,5 +1,7 @@
+import { EPath } from "@/providers/router";
 import { store } from "../providers/store";
 import { appActions } from "../slices/appSlice";
+import { t } from "@/providers/intl";
 
 interface IRequest {
   url: string;
@@ -36,12 +38,12 @@ export class ApiService {
         } else {
           store.dispatch(
             appActions.setToast({
-              title: "Brak autoryzacji",
-              description: "Zaloguj się, aby kontynuować",
+              title: t("toast.title.noAuth"),
+              description: t("toast.description.auth.login"),
               variant: "destructive",
             }),
           );
-          window.location.href = "/login";
+          window.location.href = EPath.Login;
           return undefined;
         }
       }
@@ -58,13 +60,16 @@ export class ApiService {
         if (response.headers.get("Content-Type")?.startsWith("application/json")) {
           const data = await response.json();
           if (data.code && data.message)
-            store.dispatch(
-              appActions.setToast({
-                title: data.code,
-                description: data.message,
-                variant: "destructive",
-              }),
-            );
+            if (data.code.startsWith("TOKEN")) {
+              localStorage.removeItem("token");
+            }
+          store.dispatch(
+            appActions.setToast({
+              title: data.code,
+              description: data.message,
+              variant: "destructive",
+            }),
+          );
         } else {
           throw response;
         }
@@ -78,7 +83,7 @@ export class ApiService {
       try {
         parsedError = await responseError.json().catch();
       } finally {
-        window.location.href = `/error/${parsedError?.statusCode || responseError.status}`;
+        window.location.href = `${EPath.Error}/${parsedError?.statusCode || responseError.status}`;
       }
     } finally {
       setTimeout(() => {

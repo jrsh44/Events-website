@@ -50,8 +50,8 @@ export const PagePasswordReset = () => {
         if (response.ok) {
           dispatch(
             appActions.setToast({
-              title: "Sukces",
-              description: "Hasło zostało zresetowane",
+              title: t("toast.title.success"),
+              description: t("toast.description.passwordForgot.update"),
             }),
           );
           navigate(EPath.Login);

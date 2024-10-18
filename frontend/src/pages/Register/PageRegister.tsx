@@ -60,7 +60,10 @@ export const PageRegister = () => {
           localStorage.setItem("token", data.token);
           navigate(EPath.Home);
           dispatch(
-            appActions.setToast({ title: "Sukces", description: "Pomyślnie zarejestrowano" }),
+            appActions.setToast({
+              title: t("toast.title.success"),
+              description: t("toast.description.register.success"),
+            }),
           );
           dispatch(
             appActions.setUser({
