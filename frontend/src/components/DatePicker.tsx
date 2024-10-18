@@ -12,6 +12,8 @@ import { t } from "@/providers/intl";
 interface IDatePickerProps {
   date?: Date;
   setDate: (date: Date | undefined) => void;
+  minDate?: Date;
+  maxDate?: Date;
 }
 
 export const DatePicker = (props: IDatePickerProps) => (
@@ -29,7 +31,16 @@ export const DatePicker = (props: IDatePickerProps) => (
       </Button>
     </PopoverTrigger>
     <PopoverContent className="w-auto p-0">
-      <Calendar mode="single" selected={props.date} onSelect={props.setDate} initialFocus />
+      <Calendar
+        mode="single"
+        selected={props.date}
+        onSelect={props.setDate}
+        initialFocus
+        disabled={{
+          before: props.minDate ?? new Date("2000-01-01"),
+          after: props.maxDate ?? new Date("2040-01-01"),
+        }}
+      />
     </PopoverContent>
   </Popover>
 );

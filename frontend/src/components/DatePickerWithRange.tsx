@@ -12,6 +12,8 @@ interface IDatePickerWithRangeProps {
   dateRange: DateRange;
   setDate: (dateRange: DateRange | undefined) => void;
   className?: string;
+  minDate?: Date;
+  maxDate?: Date;
 }
 
 export const DatePickerWithRange = (props: IDatePickerWithRangeProps) => (
@@ -49,6 +51,10 @@ export const DatePickerWithRange = (props: IDatePickerWithRangeProps) => (
           selected={props.dateRange}
           onSelect={props.setDate}
           numberOfMonths={2}
+          disabled={{
+            before: props.minDate ?? new Date("2000-01-01"),
+            after: props.maxDate ?? new Date("2040-01-01"),
+          }}
         />
       </PopoverContent>
     </Popover>

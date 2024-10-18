@@ -146,6 +146,7 @@ export const PageHome = () => {
             </SelectContent>
           </Select>
           <DatePickerWithRange
+            maxDate={new Date()}
             dateRange={{
               from: filters.dateFrom ? new Date(filters.dateFrom) : undefined,
               to: filters.dateTo ? new Date(filters.dateTo) : undefined,

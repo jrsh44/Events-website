@@ -83,7 +83,7 @@ export const TableData = <T extends object>(props: ITableDataProps<T>) => {
           <div className="flex-1 text-sm text-muted-foreground">
             {t("table.paggination.description", {
               page: (props.pagginationParams.page + 1).toString(),
-              maxPage: props.pagginationParams.maxPage.toString(),
+              maxPage: Math.max(props.pagginationParams.maxPage, 1).toString(),
             })}
           </div>
           <div className="space-x-2">
@@ -91,7 +91,7 @@ export const TableData = <T extends object>(props: ITableDataProps<T>) => {
               variant="outline"
               size="sm"
               onClick={() => props.pagginationParams?.setPage(props.pagginationParams.page - 1)}
-              disabled={props.pagginationParams.page === 0}
+              disabled={props.pagginationParams.page === 0 || props.pagginationParams.maxPage === 0}
             >
               {t("table.paggination.prev")}
             </Button>
@@ -99,7 +99,10 @@ export const TableData = <T extends object>(props: ITableDataProps<T>) => {
               variant="outline"
               size="sm"
               onClick={() => props.pagginationParams?.setPage(props.pagginationParams.page + 1)}
-              disabled={props.pagginationParams.page === props.pagginationParams.maxPage - 1}
+              disabled={
+                props.pagginationParams.page === props.pagginationParams.maxPage - 1 ||
+                props.pagginationParams.maxPage === 0
+              }
             >
               {t("table.paggination.next")}
             </Button>

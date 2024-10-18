@@ -80,6 +80,7 @@ export const EventDialog = (props: IEventDialogProps) => (
             <Label>{t("event.dialog.dateLabel")}</Label>
             <DatePicker
               date={props.event?.date ? new Date(props.event.date) : undefined}
+              minDate={new Date()}
               setDate={(date) =>
                 props.setEvent((prev) => {
                   if (prev) {
