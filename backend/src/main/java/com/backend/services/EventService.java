@@ -5,8 +5,6 @@ import com.backend.model.EventDto;
 import com.backend.model.EventFiltersDto;
 import com.backend.model.SearchResultDto;
 
-import java.util.List;
-
 public interface EventService {
 
     void deleteEvent(Integer eventId);
