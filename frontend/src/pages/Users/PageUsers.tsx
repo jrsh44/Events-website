@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { TableData } from "@/components/TableData";
 import { TypoBody, TypoH1 } from "@/components/Typo";
 import { DialogTrigger } from "@/components/ui/dialog";
-import { IUserFilter, IFilteredUsers, IUserCredentials } from "@/models/user";
+import { IUserFilter, IFilteredUsers, IUserCredentials, EUserRole } from "@/models/user";
 import { Services } from "@/services/Services";
 import { ColumnDef } from "@tanstack/react-table";
 import {
@@ -20,6 +20,13 @@ import { t } from "@/providers/intl";
 import { UserDialog } from "./UserDialog";
 import { roleAuth } from "@/models/auth";
 import { appActions } from "@/slices/appSlice";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const initialFilters: IUserFilter = {
   page: 0,
@@ -268,7 +275,7 @@ export const PageUsers = () => {
       </div>
       <div className="flex flex-col gap-6">
         <div
-          className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 flex-col lg:flex-row"
+          className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 flex-col lg:flex-row"
           key={filtersKey}
         >
           <Input
@@ -298,7 +305,21 @@ export const PageUsers = () => {
             }
             onBlur={() => handleUsersFetch(filters)}
           />
-          <div className="flex gap-4 justify-self-end">
+          <Select
+            name="role"
+            value={filters.role}
+            onValueChange={(value) => handleUsersFetch({ ...filters, role: value as EUserRole })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={t("user.filter.role.placeholder")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={EUserRole.User}>{t("user.filter.role.user")}</SelectItem>
+              <SelectItem value={EUserRole.Manager}>{t("user.filter.role.manager")}</SelectItem>
+              <SelectItem value={EUserRole.Admin}>{t("user.filter.role.admin")}</SelectItem>
+            </SelectContent>
+          </Select>
+          <div className="flex gap-4 justify-self-end sm:justify-self-start lg:justify-self-end">
             <UserDialog
               user={modifiedUser}
               setUser={setModifiedUser}
