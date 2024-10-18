@@ -15,6 +15,8 @@ import java.util.Random;
 @Component
 public class EventInitializer {
 
+    private final Integer minQuantity = 100;
+
     private final EventRepository eventRepository;
 
     public EventInitializer(EventRepository eventRepository) {
@@ -25,26 +27,25 @@ public class EventInitializer {
     public CommandLineRunner initializeEvents() {
         return args -> {
             long eventCount = eventRepository.count();
-            if (eventCount < 40) {
+            if (eventCount < minQuantity) {
                 List<Event> events = new ArrayList<>();
                 Random random = new Random();
 
-                for (int i = 1; i <= 40 - eventCount; i++) {
+                for (int i = 1; i <= minQuantity - eventCount; i++) {
                     Event event = Event.builder()
                             .title(generateRandomTitle((int) eventCount + i))
                             .description(generateRandomDescription())
                             .date(generateRandomDate())
                             .type(generateRandomEventType())
-                            .isArchived(random.nextBoolean())
                             .build();
 
                     events.add(event);
                 }
 
                 eventRepository.saveAll(events);
-                System.out.println((40 - eventCount) + " random events have been initialized!");
+                System.out.println((minQuantity - eventCount) + " random events have been initialized!");
             } else {
-                System.out.println("There are already 40 or more events, no need to initialize more.");
+                System.out.println("There are already " + minQuantity + " or more events, no need to initialize more.");
             }
         };
     }
@@ -65,7 +66,7 @@ public class EventInitializer {
     }
 
     private LocalDate generateRandomDate() {
-        int year = 2024;
+        int year = new Random().nextInt(2) + 2024;
         int month = new Random().nextInt(12) + 1;
         int day = new Random().nextInt(28) + 1;
         return LocalDate.of(year, month, day);

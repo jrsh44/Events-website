@@ -14,6 +14,8 @@ import java.util.Random;
 @Component
 public class UserInitializer {
 
+    private final Integer minQuantity = 40;
+
     private final UserRepository userRepository;
 
     public UserInitializer(UserRepository userRepository) {
@@ -24,11 +26,11 @@ public class UserInitializer {
     public CommandLineRunner initializeUsers() {
         return args -> {
             long userCount = userRepository.count();
-            if (userCount < 40) {
+            if (userCount < minQuantity) {
                 List<User> users = new ArrayList<>();
                 Random random = new Random();
 
-                for (int i = 1; i <= 40 - userCount; i++) {
+                for (int i = 1; i <= minQuantity - userCount; i++) {
                     User user = User.builder()
                             .firstName(generateRandomFirstName())
                             .lastName(generateRandomLastName())
@@ -41,9 +43,9 @@ public class UserInitializer {
                 }
 
                 userRepository.saveAll(users);
-                System.out.println((40 - userCount) + " random users have been initialized!");
+                System.out.println((minQuantity - userCount) + " random users have been initialized!");
             } else {
-                System.out.println("There are already 40 or more users, no need to initialize more.");
+                System.out.println("There are already " + minQuantity + " or more users, no need to initialize more.");
             }
         };
     }
