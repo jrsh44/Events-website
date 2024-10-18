@@ -268,7 +268,7 @@ export const PageUsers = () => {
       </div>
       <div className="flex flex-col gap-6">
         <div
-          className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 flex-col md:flex-row"
+          className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 flex-col lg:flex-row"
           key={filtersKey}
         >
           <Input
