@@ -59,19 +59,19 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(ExpiredTokenException.class)
     public ResponseEntity<AppResponse> handleExpiredTokenException() {
-        AppResponse appResponse = new AppResponse("AUTH-01", "Token stracił swoją ważność");
+        AppResponse appResponse = new AppResponse("TOKEN-01", "Token stracił swoją ważność");
         return new ResponseEntity<>(appResponse, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(InvalidTokenFormatException.class)
     public ResponseEntity<AppResponse> handleInvalidTokenFormatException() {
-        AppResponse appResponse = new AppResponse("AUTH-02", "Token jest niepoprawny");
+        AppResponse appResponse = new AppResponse("TOKEN-02", "Token jest niepoprawny");
         return new ResponseEntity<>(appResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserTokenException.class)
     public ResponseEntity<AppResponse> handleUserTokenException(UserTokenException ex) {
-        AppResponse appResponse = new AppResponse("AUTH-03", ex.getMessage());
+        AppResponse appResponse = new AppResponse("TOKEN-03", ex.getMessage());
         return new ResponseEntity<>(appResponse, HttpStatus.UNAUTHORIZED);
     }
 
