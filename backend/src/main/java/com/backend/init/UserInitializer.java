@@ -33,7 +33,7 @@ public class UserInitializer {
                             .firstName(generateRandomFirstName())
                             .lastName(generateRandomLastName())
                             .email(generateRandomEmail(i))
-                            .password("password") // Zakładamy, że hasło jest tymczasowe lub zaszyfrowane
+                            .password("password")
                             .role(generateRandomRole())
                             .build();
 

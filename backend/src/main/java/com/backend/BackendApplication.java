@@ -9,7 +9,7 @@ public class BackendApplication {
 
     public static void main(String[] args) {
 
-// // Kod nie jest potrzebny w przypadku dokeryzacji
+//          // Uncomment if running BE separately
 //        Dotenv dotenv = Dotenv.load();
 //
 //        System.setProperty("SPRING_SECRET_KEY", dotenv.get("SPRING_SECRET_KEY"));
