@@ -11,4 +11,4 @@ RUN yarn build
 
 EXPOSE 3000
 
-CMD ["yarn", "preview", "--host"]
+CMD ["yarn", "preview", "--host", "--port", "3000", "--no-open"]
